@@ -35,8 +35,8 @@
   },
   "flow": {
     "filenames": {
-      "js": "reaction.js",
-      "css": "reaction.css"
+      "js": "health.js",
+      "css": "health.css"
     }
   },
   "peerDependencies": {},

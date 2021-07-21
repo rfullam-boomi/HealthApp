@@ -1,0 +1,14 @@
+.rt {
+    display: block;
+    position: relative;
+    border: 1px solid black;;
+}
+
+.rt-dot {
+    position: absolute;
+    background-color: red;
+    border-radius: 3rem;
+    width: 3rem;
+    height: 3rem;
+}
+

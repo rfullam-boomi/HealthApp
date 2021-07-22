@@ -44,17 +44,29 @@
     height: 66%;
     margin: auto;
     position: relative;
-    display: block;
+    display: flex;
     border-radius: 1rem;
+    pointer-events: none;
 }
 
 .membox-box-box-hot {
     background-color: #e8fd2d;
 }
 
+.membox-box-box-clickable {
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.membox-box-box-tagged {
+    box-shadow: 0px 0px 19px 16px rgb(245 72 72);
+}
+
 .membox-header {
     display: flex;
     flex-direction: row;
+    height: 6vmin;
+    width: 100%;
 }
 
 .membox-overlay {
@@ -77,18 +89,40 @@
 }
 
 .membox-overlay-button{ 
-    border: 5px solid #000;
-    border-radius: 2rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    font-size: 2rem;
-    color:#000;
-    background-color:#ccc;
+    order: 5px solid #000;
+    border-radius: 6vmin;
+    padding-left: 6vmin;
+    padding-right: 6vmin;
+    font-size: 6vmin;
+    color: #000;
+    background-color: #ccc;
     pointer-events: all;
     cursor: pointer;
 }
 
 .membox-overlay-message{ 
-    font-size: 2rem;
+    font-size: 5vmin;
     color:#000;
+    text-align: center;
+    margin: auto;
+}
+
+.membox-footer {
+    display: flex;
+    flex-direction: row;
+    height: 6vmin;
+    width: 100%;
+}
+
+.membox-box-result {
+    margin: auto;
+    font-size: 6vmax;
+}
+
+.membox-box-result-good {
+    color: #7ff37f;
+}
+
+.membox-box-result-bad {
+    color: #ff8b8b;
 }

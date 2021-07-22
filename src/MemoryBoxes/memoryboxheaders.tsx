@@ -1,5 +1,5 @@
 import React = require("react");
-import MemoryBoxes, { eRunState } from "./memoryboxes";
+import MemoryBoxes, { eActivityState, eDelayState, eRunState } from "./memoryboxes";
 
 
 export default class MemoryBoxHeader extends React.Component<any,any> {
@@ -8,69 +8,74 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
     render() {
         let root: MemoryBoxes = this.props.root;
         let content: any;
-        switch(root.status){
+        let button: any;
+        let message: any;
+        switch(root.runState){
             case eRunState.stopped:
-                content=(
+                message = (
                     <div
-                        className="membox-header-button"
-                        onClick={root.startTest}
+                        className="membox-overlay-message"
                     >
-                        Start
+                        {""}
                     </div>
-                );  
+                );
                 break;
 
             case eRunState.starting: 
-                content=(
-                    <div
-                        className="membox-header-button"
-                        onClick={root.stopTest}
-                    >
-                        {"Cancel " + root.countdown}
-                    </div>
-                );  
+                switch(root.countdownState){
+                    case eDelayState.countdown:
+                        message = (
+                            <div
+                                className="membox-overlay-message"
+                            >
+                                {"Get Ready - " + root.countdownRemaining }
+                            </div>
+                        );
+                        break;
+                    
+                    default:
+                        message=undefined;
+
+                }
                 break;
 
-            case eRunState.stopped: 
-                content=(
-                    <div
-                        className="membox-header-button"
-                        onClick={root.stopTest}
-                    >
-                        {"Stop Test" + root.iteration + "/" + root.iterations}
-                    </div>
-                );  
-                break;
+            case eRunState.running: 
+                switch(root.activityState){
+                    case eActivityState.flashing:
+                        message = (
+                            <div
+                                className="membox-overlay-message"
+                            >
+                                {"Remember The Yellow Squares - " + root.countdownRemaining }
+                            </div>
+                        );
+                        break;
+                    case eActivityState.answering:
+                        message = (
+                            <div
+                                className="membox-overlay-message"
+                            >
+                                {"Tag the squares which were yellow - " + root.countdownRemaining }
+                            </div>
+                        );
+                        break;
+                    
+                    default:
+                        message=undefined;
 
+                }
+                break;
             
+            default:
+                message = undefined;
+                
             
-            case eRunState.canceled:
-                content=(
-                    <div
-                        className="membox-header-button"
-                        onClick={root.startTest}
-                    >
-                        Restart Test
-                    </div>
-                );  
-                break;
-
-            case eRunState.complete:
-                content=(
-                    <div
-                        className="membox-header-button"
-                        onClick={root.startTest}
-                    >
-                        Restart Test
-                    </div>
-                );  
-                break;
         }
         return(
             <div
                 className="membox-header"
             >
-                {content}
+                {message}
             </div>
         );
     }

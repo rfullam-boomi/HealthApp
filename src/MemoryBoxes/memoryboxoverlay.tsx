@@ -1,5 +1,5 @@
 import React = require("react");
-import MemoryBoxes, { eRunState } from "./memoryboxes";
+import MemoryBoxes, { eActivityState, eDelayState, eRunState } from "./memoryboxes";
 
 
 export default class MemoryBoxOverlay extends React.Component<any,any> {
@@ -7,34 +7,47 @@ export default class MemoryBoxOverlay extends React.Component<any,any> {
 
     render() {
         let root: MemoryBoxes = this.props.root;
-        let content: any;
-
-        switch(root.status){
+        let button: any;
+        let message: any;
+        switch(root.runState){
             case eRunState.stopped:
-                content=(
+                button=(
                     <div
                         className="membox-overlay-button"
                         onClick={root.startTest}
                     >
-                        Start
+                        Begin Test
                     </div>
                 );  
+                message=undefined;
                 break;
 
             case eRunState.starting: 
-                content=(
+                /*button=(
                     <div
-                        className="membox-overlay-message"
+                        className="membox-overlay-button"
+                        onClick={root.stopTest}
                     >
-                        {"starting in " + root.countdown}
+                        Stop Test
                     </div>
-                );  
+                );*/
+                
                 break;
+
+            case eRunState.running: 
+                /*button=(
+                    <div
+                        className="membox-overlay-button"
+                        onClick={root.stopTest}
+                    >
+                        Stop Test
+                    </div>
+                );*/
+                
+                break;
+
+            
         }
-
-        
-
-
         return(
             <div
                 className="membox-overlay"
@@ -42,7 +55,7 @@ export default class MemoryBoxOverlay extends React.Component<any,any> {
                 <div
                     className="membox-overlay-center"
                 >
-                    {content}
+                    {button}
                 </div>
             </div>
         );

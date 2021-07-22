@@ -56,3 +56,39 @@
     display: flex;
     flex-direction: row;
 }
+
+.membox-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.membox-overlay-center{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    margin: auto;
+}
+
+.membox-overlay-button{ 
+    border: 5px solid #000;
+    border-radius: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    font-size: 2rem;
+    color:#000;
+    background-color:#ccc;
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.membox-overlay-message{ 
+    font-size: 2rem;
+    color:#000;
+}

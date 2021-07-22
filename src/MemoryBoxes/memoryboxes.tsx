@@ -4,6 +4,7 @@ import './memoryboxes.css';
 import MemoryBox from './memorybox';
 import { CSSProperties } from "react";
 import MemoryBoxHeader from "./memoryboxheaders";
+import MemoryBoxOverlay from "./memoryboxoverlay";
 
 
 declare const manywho: any;
@@ -11,8 +12,8 @@ declare const manywho: any;
 export enum eRunState {
     stopped,
     starting,
-    running,
-    interval,
+    flashing,
+    answering,
     canceled,
     complete
 }
@@ -23,9 +24,10 @@ export default class MemoryBoxes extends FlowComponent {
     hotBoxes: Array<number> = [];
     boxRows: Array<any>;
     previousContent: any;
-    showHot: boolean = false;
     header: MemoryBoxHeader;
     headerElement: any;
+    overlay: MemoryBoxOverlay;
+    overlayElement: any;
     status: eRunState = eRunState.stopped;
 
     iterations: number = 10;
@@ -62,9 +64,10 @@ export default class MemoryBoxes extends FlowComponent {
         this.countDown = this.countDown.bind(this);
         this.stopTest = this.stopTest.bind(this);
         this.runIteration = this.runIteration.bind(this);
-        this.interval = this.interval.bind(this);
+    
 
         this.randomizeBoxes = this.randomizeBoxes.bind(this);
+        this.showHot = this.showHot.bind(this);
         this.hideHot = this.hideHot.bind(this);
     }
 
@@ -75,6 +78,12 @@ export default class MemoryBoxes extends FlowComponent {
             <MemoryBoxHeader 
                 root={this}
                 ref={(element: MemoryBoxHeader) => {this.header=element}}
+            />
+        );
+        this.overlayElement = (
+            <MemoryBoxOverlay 
+                root={this}
+                ref={(element: MemoryBoxOverlay) => {this.overlay=element}}
             />
         );
         this.buildBoxes();
@@ -121,7 +130,7 @@ export default class MemoryBoxes extends FlowComponent {
     startTest() {
         this.status = eRunState.starting;
         this.iteration = 0;
-        this.countdown = 3;
+        this.countdown = 5;
         this.countDown();
     }
 
@@ -129,11 +138,12 @@ export default class MemoryBoxes extends FlowComponent {
         this.status = eRunState.starting;
         if(this.countdown > 0){
             this.countdown-=1;
-            this.header.forceUpdate();
+            this.overlay.forceUpdate();
             setTimeout(this.countDown,1000);
         }
         else {
-            this.status = eRunState.running;
+            //this.status = eRunState.running;
+            //this.overlay.forceUpdate();
             this.runIteration();
         }
     }
@@ -145,6 +155,13 @@ export default class MemoryBoxes extends FlowComponent {
     }
 
     runIteration() {
+        // randomise the hot boxes
+        this.randomizeBoxes();
+        //make the boxes refresh to show their hot status
+        
+        //set a timeout to then hide the hot statuses
+        setTimeout((this.hideHot), this.flashSeconds * 1000);
+        /*
         if(this.status === eRunState.running && this.iteration <= this.iterations){
             this.iteration += 1;
             this.header.forceUpdate();
@@ -155,36 +172,32 @@ export default class MemoryBoxes extends FlowComponent {
             this.iteration = 0;
             this.header.forceUpdate();
         }
+        */
     }
 
     randomizeBoxes() {
         //get 3 randoms between 0 & 8
-        this.showHot=true;
         this.hotBoxes=[];
         this.hotBoxes.push(12);
         this.hotBoxes.push(23);
         this.hotBoxes.push(31);
+        
+    }
+
+    showHot() {
         this.boxes.forEach((box: MemoryBox) => {
             box.forceUpdate();
         });
-        setTimeout(this.hideHot, this.flashSeconds * 1000);
+        this.status = eRunState.flashing;
+        this.overlay.forceUpdate();
     }
 
     hideHot() {
-        this.showHot=false;
-        this.hotBoxes=[];
         this.boxes.forEach((box: MemoryBox) => {
             box.forceUpdate();
         });
-        setTimeout(this.interval, this.responseSeconds * 1000);
-    }
-
-    interval(){
-        this.status = eRunState.interval;
-        // save results
-        this.header.forceUpdate();
-        this.countdown=3;
-        this.countDown();
+        this.status = eRunState.answering;
+        this.overlay.forceUpdate();
     }
 
 
@@ -221,6 +234,7 @@ export default class MemoryBoxes extends FlowComponent {
                     className="membox-body"
                 >
                    {this.boxRows}
+                   {this.overlayElement}
                 </div>
                 
             </div>

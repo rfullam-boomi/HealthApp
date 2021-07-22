@@ -31,7 +31,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
                 );  
                 break;
 
-            case eRunState.running: 
+            case eRunState.stopped: 
                 content=(
                     <div
                         className="membox-header-button"
@@ -42,16 +42,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
                 );  
                 break;
 
-            case eRunState.interval:
-                content=(
-                    <div
-                        className="membox-header-button"
-                        onClick={root.stopTest}
-                    >
-                        {"Stop Test " + root.countdown}
-                    </div>
-                );  
-                break;
+            
             
             case eRunState.canceled:
                 content=(

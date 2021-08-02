@@ -44,7 +44,7 @@
     height: 66%;
     margin: auto;
     position: relative;
-    display: flex;
+    display: flex1;
     border-radius: 1rem;
     pointer-events: none;
 }

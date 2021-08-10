@@ -358,7 +358,6 @@ export default class MemoryBoxes extends FlowComponent {
                 key="mbxs"
                 className="membox"
                 style={style}
-                onClick={this.randomizeBoxes}
             >
                 <div
                     className="membox-title"

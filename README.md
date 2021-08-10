@@ -42,9 +42,67 @@ Optional
 
 # DotClicker
 
+![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/DotClicker.png)
+
+# Functionality
+
 Displays a canvas with a randomly appearing dot the user can click.
 
-The time taken from dot appearance to click is recorded
+The time taken from dot appearance to click is recorded as is the accuracy of the touch point regards the dot's center
+
+## Component Attributes
+
+### classes
+
+Like all components, adding a "classes" attribute will cause that string to be added to the base container's class value.
+
+### numRounds
+
+Number.
+
+The number of times to display a clickable dot which makes up the complete test.
+
+Default = 3.
+
+### countdownSeconds
+
+Number.
+
+The number of lead in seconds to count down at the start of the test and between rounds.
+
+Default = 5.
+
+### responseSeconds
+
+Number.
+
+The maximum number of seconds to wait for a user to click before defaulting to a failure and moving to the next round.
+
+Default = "-1" which means no timeout.
+
+### startLabel
+
+String.
+
+The label to show on the start button before a test begins.
+
+Default = "Begin".
+
+## Outcomes
+
+1 outcome will be used if defined: -
+
+### OnComplete
+
+This will trigger when a test is completed and all rounds have been completed.
+Optional
+
+### State
+
+An List of type TestResult containing one TestResult per round.
+
+See the TestResult object definition below.
+
 
 
 # ColourNames

@@ -15,14 +15,12 @@ export class Results {
         this.items.set(result.round, result);
     }
 
-    makeFlowObjectData() : FlowObjectData {
-        let results: FlowObjectData = FlowObjectData.newInstance("TestResults");
+    makeFlowObjectData() : FlowObjectDataArray {
         let items: FlowObjectDataArray = new FlowObjectDataArray();
         this.items.forEach((item: Result) => {
             items.addItem(item.makeFlowObjectData());
         });
-        results.addProperty(FlowObjectDataProperty.newInstance("results",eContentType.ContentList,items))
-        return results;
+        return items;
     }
 }
 

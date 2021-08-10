@@ -1,14 +1,151 @@
-.rt {
-    display: block;
+.dotclick {
+    display: flex;
+    flex-direction: column;
     position: relative;
-    border: 1px solid black;;
+    border: 1px solid black;
 }
 
-.rt-dot {
+.dotclick-title {
+    display: flex;
+    flex-direction: row;
+}
+
+.dotclick-body {
+    display: block;
+    position: relative;
+}
+
+.dotclick-row {
+    display: block;
+    width: 100%;
+}
+
+.dotclick-box {
+    display: inline-block;
+    width: 33.333%;
+    height:0;
+    padding-top: 33.333%;
+    position: relative;
+}
+
+.dotclick-box-internal {
+    display: flex;
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    
+}
+
+.dotclick-box-box {
+    background-color: #3562f3;
+    width: 66%;
+    height: 66%;
+    margin: auto;
+    position: relative;
+    display: flex1;
+    border-radius: 1rem;
+    pointer-events: none;
+}
+
+.dotclick-box-box-hot {
+    background-color: #e8fd2d;
+}
+
+.dotclick-box-box-clickable {
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.dotclick-box-box-tagged {
+    box-shadow: 0px 0px 19px 16px rgb(245 72 72);
+}
+
+.dotclick-header {
+    display: flex;
+    flex-direction: row;
+    height: 6vmin;
+    width: 100%;
+}
+
+.dotclick-overlay {
     position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.dotclick-overlay-center{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    margin: auto;
+}
+
+.dotclick-overlay-button{ 
+    border: 5px solid #000;
+    border-radius: 2rem;
+    padding: 1%;
+    padding-left: 10%;
+    padding-right: 10%;
+    font-size: 200%;
+    color: #000;
+    background-color: #ccc;
+    pointer-events: all;
+    cursor: pointer;
+    margin: auto;
+    white-space: nowrap;
+}
+
+.dotclick-overlay-message{ 
+    font-size: 150%;
+    color:#000;
+    text-align: center;
+    margin: auto;
+}
+
+.dotclick-footer {
+    display: flex;
+    flex-direction: row;
+    height: 12vmin;
+    line-height: 1;
+    width: 100%;
+}
+
+.dotclick-colour {
+    height: 10vmax;
+    display: flex;
+}
+
+.dotclick-colour-label {
+    font-size: 6vmax;
+    line-height: 1;
+    margin: auto;
+}
+
+
+.dotclick-dotout {
+    position: absolute;
+    background-color: transparent;
+    border-radius: 3rem;
+    width: 15rem;
+    height: 15rem;
+    display: none;
+}
+.dotclick-dot {
+    position: relative;
     background-color: red;
     border-radius: 3rem;
     width: 3rem;
     height: 3rem;
+    display: block;
+    box-shadow: 0px 0px 3rem 3rem red;
+    margin: auto;
 }
 

@@ -1,5 +1,5 @@
 import React = require("react");
-import { FlowComponent } from 'flow-component-model';
+import { FlowComponent, FlowObjectDataArray } from 'flow-component-model';
 import './memoryboxes.css';
 import MemoryBox from './memorybox';
 import { CSSProperties } from "react";
@@ -16,7 +16,7 @@ declare const manywho: any;
 export default class MemoryBoxes extends FlowComponent {
     
     boxes: Map<number,MemoryBox>;
-    hotBoxes: Array<number> = [];
+    hotBoxes: Array<number> = new Array();
     selectedBoxes: Array<number> = [];
     resultBoxes: Map<number,boolean>;
     boxRows: Array<any>;
@@ -38,11 +38,14 @@ export default class MemoryBoxes extends FlowComponent {
     roundStart: number;
     roundEnd: number;
     countdownSeconds: number = 5;
+    scoreSeconds: number = 5;
     flashSeconds: number = 3;
     responseSeconds: number = 30;
     responseDone: boolean = false;
 
-    results: Results;
+    results: Results = new Results();
+
+    startLabel: string;
 
     setBox(key: number, face: MemoryBox){
         if(face) {
@@ -88,6 +91,13 @@ export default class MemoryBoxes extends FlowComponent {
         this.randomizeBoxes = this.randomizeBoxes.bind(this);
         
         this.showHot = this.showHot.bind(this);
+
+        this.numRounds = parseInt(this.getAttribute("numRounds","3"));
+        this.countdownSeconds = parseInt(this.getAttribute("countdownSeconds","2"));
+        this.flashSeconds = parseInt(this.getAttribute("flashSeconds","4"));
+        this.scoreSeconds = parseInt(this.getAttribute("scoreSeconds","4"));
+        this.responseSeconds = parseInt(this.getAttribute("responseSeconds","-1"));
+        this.startLabel = this.getAttribute("startLabel","Begin");
         
     }
 
@@ -135,10 +145,10 @@ export default class MemoryBoxes extends FlowComponent {
             for(let col = 1 ; col <= 3 ; col ++) {
                 colElements.push(
                     <MemoryBox
-                        key={parseInt(row+""+col)}
-                        box={parseInt(row+""+col)}
+                        key={((row * 3)-3) + col}
+                        box={((row * 3)-3) + col}
                         root={this}
-                        ref={(element: MemoryBox) => {this.setBox(parseInt(row+""+col),element)}}
+                        ref={(element: MemoryBox) => {this.setBox(((row * 3)-3) + col,element)}}
                     />
                 );
             }
@@ -163,11 +173,20 @@ export default class MemoryBoxes extends FlowComponent {
     }
 
     async startTest() {
+        this.results.clear();
         this.runState = eRunState.starting;
         this.roundNumber = 0;
-        this.results = new Results;
-        this.startRound();
-
+        while(this.roundNumber < this.numRounds) {
+            this.roundNumber++;
+            await this.startRound();
+        }
+        // test complete
+        let results: FlowObjectDataArray = this.results.makeFlowObjectData();
+        console.log(JSON.stringify(results));
+        this.setStateValue(results);
+        if(this.outcomes["OnComplete"]) {
+            await this.triggerOutcome("OnComplete");
+        }
     }
 
     async sleep(milliseconds: number) {
@@ -203,7 +222,7 @@ export default class MemoryBoxes extends FlowComponent {
     }
 
     async startRound() {
-        let roundStart = new Date().getTime();
+        
         this.countdownState = eDelayState.none;
         this.activityState = eActivityState.none;
         this.runState = eRunState.starting;
@@ -221,14 +240,19 @@ export default class MemoryBoxes extends FlowComponent {
         // show hot boxes for flash period
         await this.showHot(this.flashSeconds);
 
+        // start counting
+        let roundStart = new Date().getTime();
+
         // allow time for answers
         await this.getAnswers(this.responseSeconds);
 
+        // stop counting
         let roundEnd = new Date().getTime();
-        let score: Result = await this.getScore(this.roundNumber, roundEnd-roundStart);
-        this.results.add(score);
 
-        console.log(JSON.stringify(score,null,2));
+        let score: Result = await this.getScore(this.roundNumber, roundEnd-roundStart);
+
+        await this.countDown(this.scoreSeconds);
+        this.results.add(score);
 
         this.runState=eRunState.stopped;
         this.refreshInfo();
@@ -236,10 +260,13 @@ export default class MemoryBoxes extends FlowComponent {
 
     randomizeBoxes() {
         //get 3 randoms between 0 & 8
-        this.hotBoxes=[];
-        this.hotBoxes.push(12);
-        this.hotBoxes.push(23);
-        this.hotBoxes.push(31);
+        this.hotBoxes = new Array();
+        while (this.hotBoxes.length<3) {
+            let item: number = (Math.floor(Math.random()*8)+1);
+            if(this.hotBoxes.indexOf(item) < 0) {
+                this.hotBoxes.push(item);
+            }
+        }
     }
 
     async showHot(numSeconds: number) : Promise<any> {
@@ -254,7 +281,7 @@ export default class MemoryBoxes extends FlowComponent {
     async getAnswers(maxTime?: number) : Promise<any> {
         this.activityState = eActivityState.answering;
         this.responseDone = false;
-        if(maxTime) {
+        if(maxTime && maxTime > 0) {
             this.countdownRemaining=maxTime;
         }
         else {
@@ -318,7 +345,7 @@ export default class MemoryBoxes extends FlowComponent {
             style.display = 'none';
         }
         if (this.model.width) {
-            //.width = this.model.width + 'px';
+            //style.width = this.model.width + 'px';
             //style.height = style.width;
         }
         if (this.model.height) {

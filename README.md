@@ -127,11 +127,98 @@ An List of type TestResult containing one TestResult per round.
 See the TestResult object definition below.
 
 
+# Memory Boxes
+
+![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/MemoryBoxes.png)
+
+# Functionality
+
+Shows a 3 x 3 grid of boxes.
+
+3 of the boxes will then turn yellow for a short period before turning blue again.
+
+The user must then tag the ones which were yellow.
+
+
+## Component Attributes
+
+### classes
+
+Like all components, adding a "classes" attribute will cause that string to be added to the base container's class value.
+
+### numRounds
+
+Number.
+
+The number of different colours to display which makes up the complete test.
+
+Default = 3.
+
+### countdownSeconds
+
+Number.
+
+The number of lead in seconds to count down at the start of the test and between rounds.
+
+Default = 2.
+
+### flashSeconds
+
+Number.
+
+The number of seconds to reveal the yellow boxes.
+
+Default = 4.
+
+### responseSeconds
+
+Number.
+
+The maximum number of seconds to wait for an answer before defaulting to a failure and moving to the next round.
+
+Default = "-1" which means no timeout.
+
+### scoreSeconds
+
+Number.
+
+The number of seconds to show the user's selections vs the yellow squares shown.
+
+Default = .
+
+### startLabel
+
+String.
+
+The label to show on the startt button before a test begins.
+
+Default = "Begin".
+
+
+
+## Outcomes
+
+1 outcome will be used if defined: -
+
+### OnComplete
+
+This will trigger when a test is completed and all rounds have been completed.
+Optional
+
+### State
+
+An List of type TestResult containing one TestResult per round.
+
+See the TestResult object definition below.
+
+
 
 
 # Result Type Definition
 
-All tests return an array of TestResult objects in the state: -
+All tests return an array of TestResult objects in the state.
+
+Use this via the API tool to create the type: -
 
 ```
 {

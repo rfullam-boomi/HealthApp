@@ -90,20 +90,21 @@
 
 .colnam-overlay-button{ 
     border: 5px solid #000;
-    border-radius: 8vmin;
-    padding: 1vmin;
-    padding-left: 6vmin;
-    padding-right: 6vmin;
-    font-size: 6vmin;
+    border-radius: 2rem;
+    padding: 1%;
+    padding-left: 10%;
+    padding-right: 10%;
+    font-size: 200%;
     color: #000;
     background-color: #ccc;
     pointer-events: all;
     cursor: pointer;
     margin: auto;
+    white-space: nowrap;
 }
 
 .colnam-overlay-message{ 
-    font-size: 5vmin;
+    font-size: 150%;
     color:#000;
     text-align: center;
     margin: auto;

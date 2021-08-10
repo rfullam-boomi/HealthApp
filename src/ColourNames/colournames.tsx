@@ -1,5 +1,5 @@
 import React = require("react");
-import { FlowComponent, FlowObjectData } from 'flow-component-model';
+import { FlowComponent, FlowObjectData, FlowObjectDataArray } from 'flow-component-model';
 import './colournames.css';
 import { CSSProperties } from "react";
 import { eActivityState, eDelayState, eRunState } from "../enums";
@@ -126,9 +126,9 @@ export default class ColourNames extends FlowComponent {
             await this.startRound();
         }
         // test complete
-        let results: FlowObjectData = this.results.makeFlowObjectData();
+        let results: FlowObjectDataArray = this.results.makeFlowObjectData();
         console.log(JSON.stringify(results));
-        this.setState(results);
+        this.setStateValue(results);
         if(this.outcomes["OnComplete"]) {
             await this.triggerOutcome("OnComplete");
         }
@@ -191,6 +191,7 @@ export default class ColourNames extends FlowComponent {
 
         
         let score: Result = await this.getScore(this.roundNumber, roundEnd-roundStart);
+        this.results.add(score);
 
         this.runState=eRunState.stopped;
         this.refreshInfo();

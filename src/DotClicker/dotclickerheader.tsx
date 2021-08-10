@@ -1,13 +1,13 @@
 import React = require("react");
 import { eRunState, eDelayState, eActivityState } from "../enums";
-import MemoryBoxes from "./memoryboxes";
+import DotClicker from "./dotclicker";
 
 
-export default class MemoryBoxHeader extends React.Component<any,any> {
+export default class DotClickerHeader extends React.Component<any,any> {
 
 
     render() {
-        let root: MemoryBoxes = this.props.root;
+        let root: DotClicker = this.props.root;
         let content: any;
         let button: any;
         let message: any;
@@ -15,7 +15,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
             case eRunState.stopped:
                 message = (
                     <div
-                        className="membox-overlay-message"
+                        className="dotclick-overlay-message"
                     >
                         {""}
                     </div>
@@ -27,7 +27,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
                     case eDelayState.countdown:
                         message = (
                             <div
-                                className="membox-overlay-message"
+                                className="dotclick-overlay-message"
                             >
                                 {"Get Ready - " + root.countdownRemaining }
                             </div>
@@ -42,21 +42,12 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
 
             case eRunState.running: 
                 switch(root.activityState){
-                    case eActivityState.flashing:
-                        message = (
-                            <div
-                                className="membox-overlay-message"
-                            >
-                                {"Remember The Yellow Squares - " + root.countdownRemaining }
-                            </div>
-                        );
-                        break;
                     case eActivityState.answering:
                         message = (
                             <div
-                                className="membox-overlay-message"
+                                className="dotclick-overlay-message"
                             >
-                                {"Which ones were yellow" + (root.countdownRemaining > 0? " - " + root.countdownRemaining : "")}
+                                {"Click the dot" + (root.countdownRemaining > 0? " - " + root.countdownRemaining : "")}
                             </div>
                         );
                         break;
@@ -74,7 +65,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
         }
         return(
             <div
-                className="membox-header"
+                className="dotclick-header"
             >
                 {message}
             </div>

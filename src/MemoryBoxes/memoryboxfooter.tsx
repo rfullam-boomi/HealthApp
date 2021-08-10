@@ -41,12 +41,6 @@ export default class MemoryBoxFooter extends React.Component<any,any> {
                         button=([
                             <div
                                 className="membox-overlay-button"
-                                onClick={root.stopTest}
-                            >
-                                Cancel Test
-                            </div>,
-                            <div
-                                className="membox-overlay-button"
                                 onClick={root.doneAnswering}
                             >
                                 Submit

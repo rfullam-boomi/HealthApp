@@ -1,5 +1,6 @@
 import React = require("react");
-import MemoryBoxes, { eActivityState, eRunState } from "./memoryboxes";
+import { eActivityState } from "../enums";
+import MemoryBoxes from "./memoryboxes";
 
 
 export default class MemoryBox extends React.Component<any,any> {

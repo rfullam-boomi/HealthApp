@@ -1,13 +1,14 @@
 import React = require("react");
-import { eRunState, eDelayState, eActivityState } from "../enums";
-import MemoryBoxes from "./memoryboxes";
+import { eActivityState, eDelayState, eRunState } from "../enums";
+import ColourNames from "./ColourNames";
 
 
-export default class MemoryBoxHeader extends React.Component<any,any> {
+
+export default class ColourNamesHeader extends React.Component<any,any> {
 
 
     render() {
-        let root: MemoryBoxes = this.props.root;
+        let root: ColourNames = this.props.root;
         let content: any;
         let button: any;
         let message: any;
@@ -15,7 +16,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
             case eRunState.stopped:
                 message = (
                     <div
-                        className="membox-overlay-message"
+                        className="colnam-overlay-message"
                     >
                         {""}
                     </div>
@@ -27,7 +28,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
                     case eDelayState.countdown:
                         message = (
                             <div
-                                className="membox-overlay-message"
+                                className="colnam-overlay-message"
                             >
                                 {"Get Ready - " + root.countdownRemaining }
                             </div>
@@ -42,21 +43,12 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
 
             case eRunState.running: 
                 switch(root.activityState){
-                    case eActivityState.flashing:
-                        message = (
-                            <div
-                                className="membox-overlay-message"
-                            >
-                                {"Remember The Yellow Squares - " + root.countdownRemaining }
-                            </div>
-                        );
-                        break;
                     case eActivityState.answering:
                         message = (
                             <div
-                                className="membox-overlay-message"
+                                className="colnam-overlay-message"
                             >
-                                {"Tag the squares which were yellow - " + root.countdownRemaining }
+                                {"Answer" + (root.countdownRemaining > 0? " - " + root.countdownRemaining : "")}
                             </div>
                         );
                         break;
@@ -74,7 +66,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
         }
         return(
             <div
-                className="membox-header"
+                className="colnam-header"
             >
                 {message}
             </div>

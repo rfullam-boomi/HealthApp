@@ -1,23 +1,22 @@
 import React = require("react");
 import { eRunState } from "../enums";
-import MemoryBoxes from "./memoryboxes";
+import ColourNames from "./ColourNames";
 
-
-export default class MemoryBoxOverlay extends React.Component<any,any> {
+export default class ColourNamesOverlay extends React.Component<any,any> {
 
 
     render() {
-        let root: MemoryBoxes = this.props.root;
+        let root: ColourNames = this.props.root;
         let button: any;
         let message: any;
         switch(root.runState){
             case eRunState.stopped:
                 button=(
                     <div
-                        className="membox-overlay-button"
+                        className="colnam-overlay-button"
                         onClick={root.startTest}
                     >
-                        Begin Test
+                        {root.startLabel}
                     </div>
                 );  
                 message=undefined;
@@ -26,7 +25,7 @@ export default class MemoryBoxOverlay extends React.Component<any,any> {
             case eRunState.starting: 
                 /*button=(
                     <div
-                        className="membox-overlay-button"
+                        className="colnam-overlay-button"
                         onClick={root.stopTest}
                     >
                         Stop Test
@@ -38,7 +37,7 @@ export default class MemoryBoxOverlay extends React.Component<any,any> {
             case eRunState.running: 
                 /*button=(
                     <div
-                        className="membox-overlay-button"
+                        className="colnam-overlay-button"
                         onClick={root.stopTest}
                     >
                         Stop Test
@@ -51,10 +50,10 @@ export default class MemoryBoxOverlay extends React.Component<any,any> {
         }
         return(
             <div
-                className="membox-overlay"
+                className="colnam-overlay"
             >
                 <div
-                    className="membox-overlay-center"
+                    className="colnam-overlay-center"
                 >
                     {button}
                 </div>

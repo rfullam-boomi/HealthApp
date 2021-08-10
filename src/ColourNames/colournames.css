@@ -1,0 +1,129 @@
+.colnam {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid black;
+}
+
+.colnam-title {
+    display: flex;
+    flex-direction: row;
+}
+
+.colnam-body {
+    display: block;
+    position: relative;
+}
+
+.colnam-row {
+    display: block;
+    width: 100%;
+}
+
+.colnam-box {
+    display: inline-block;
+    width: 33.333%;
+    height:0;
+    padding-top: 33.333%;
+    position: relative;
+}
+
+.colnam-box-internal {
+    display: flex;
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    
+}
+
+.colnam-box-box {
+    background-color: #3562f3;
+    width: 66%;
+    height: 66%;
+    margin: auto;
+    position: relative;
+    display: flex1;
+    border-radius: 1rem;
+    pointer-events: none;
+}
+
+.colnam-box-box-hot {
+    background-color: #e8fd2d;
+}
+
+.colnam-box-box-clickable {
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.colnam-box-box-tagged {
+    box-shadow: 0px 0px 19px 16px rgb(245 72 72);
+}
+
+.colnam-header {
+    display: flex;
+    flex-direction: row;
+    height: 6vmin;
+    width: 100%;
+}
+
+.colnam-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.colnam-overlay-center{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    margin: auto;
+}
+
+.colnam-overlay-button{ 
+    border: 5px solid #000;
+    border-radius: 8vmin;
+    padding: 1vmin;
+    padding-left: 6vmin;
+    padding-right: 6vmin;
+    font-size: 6vmin;
+    color: #000;
+    background-color: #ccc;
+    pointer-events: all;
+    cursor: pointer;
+    margin: auto;
+}
+
+.colnam-overlay-message{ 
+    font-size: 5vmin;
+    color:#000;
+    text-align: center;
+    margin: auto;
+}
+
+.colnam-footer {
+    display: flex;
+    flex-direction: row;
+    height: 12vmin;
+    line-height: 1;
+    width: 100%;
+}
+
+.colnam-colour {
+    height: 10vmax;
+    display: flex;
+}
+
+.colnam-colour-label {
+    font-size: 6vmax;
+    line-height: 1;
+    margin: auto;
+}

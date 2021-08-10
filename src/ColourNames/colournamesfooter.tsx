@@ -1,13 +1,13 @@
 import React = require("react");
-import { eRunState, eActivityState } from "../enums";
-import MemoryBoxes from "./memoryboxes";
+import { eActivityState, eRunState } from "../enums";
+import ColourNames from "./ColourNames";
 
 
-export default class MemoryBoxFooter extends React.Component<any,any> {
+export default class ColourNamesFooter extends React.Component<any,any> {
 
 
     render() {
-        let root: MemoryBoxes = this.props.root;
+        let root: ColourNames = this.props.root;
         let content: any;
         let button: any;
         let message: any;
@@ -18,7 +18,7 @@ export default class MemoryBoxFooter extends React.Component<any,any> {
             case eRunState.starting: 
                 button=(
                     <div
-                        className="membox-overlay-button"
+                        className="colnam-overlay-button"
                         onClick={root.stopTest}
                     >
                         Cancel Test
@@ -27,29 +27,19 @@ export default class MemoryBoxFooter extends React.Component<any,any> {
 
             case eRunState.running: 
                 switch(root.activityState){
-                    case eActivityState.flashing:
-                        button=(
-                            <div
-                                className="membox-overlay-button"
-                                onClick={root.stopTest}
-                            >
-                                Cancel Test
-                            </div>
-                        );
-                        break;
                     case eActivityState.answering:
                         button=([
                             <div
-                                className="membox-overlay-button"
-                                onClick={root.stopTest}
+                                className="colnam-overlay-button"
+                                onClick={(e: any) => {root.doneAnswering(true)}}
                             >
-                                Cancel Test
+                                {root.correctLabel}
                             </div>,
                             <div
-                                className="membox-overlay-button"
-                                onClick={root.doneAnswering}
+                                className="colnam-overlay-button"
+                                onClick={(e: any) => {root.doneAnswering(false)}}
                             >
-                                Submit
+                                {root.incorrectLabel}
                             </div>
                         ]
                         );
@@ -68,7 +58,7 @@ export default class MemoryBoxFooter extends React.Component<any,any> {
         }
         return(
             <div
-                className="membox-footer"
+                className="colnam-footer"
             >
                 {button}
             </div>

@@ -186,7 +186,7 @@ An List of type TestResult containing one TestResult per round.
 See the TestResult object definition below.
 
 
-# Memory Boxes
+# MemoryBoxes
 
 ![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/MemoryBoxes.png)
 
@@ -282,7 +282,7 @@ Use this via the API tool to create the type: -
 ```
 {
         "developerName": "TestResult",
-        "developerSummary": "The result of a single test round"
+        "developerSummary": "The result of a single test round",
         "elementType": "TYPE",
         "properties": [
             {

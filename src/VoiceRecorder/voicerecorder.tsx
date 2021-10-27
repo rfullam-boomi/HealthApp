@@ -2,7 +2,6 @@ import { FlowComponent } from "flow-component-model";
 import { CSSProperties } from "react";
 import React = require("react");
 import './voicerecorder.css';
-import { decode } from "base64-arraybuffer";
 import AudioGraph from "./voicegraph";
 
 declare const manywho: any;

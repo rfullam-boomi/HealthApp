@@ -215,7 +215,7 @@ export default class Face extends React.Component<any,any> {
         let color: string = this.calcColor();
         
         let className: string = "facebar-element";
-        if(root.selectedFace===this.props.level){
+        if(root.state.selectedFace===this.props.level){
             className += " facebar-element-selected"
         }
         return(

@@ -10,8 +10,16 @@ export default class FaceBar extends FlowComponent {
 
     faces: Map<number,Face>;
     faceElements: Array<any>;
-    selectedFace: number; 
+    //selectedFace: number; 
     previousContent: any;
+
+    constructor(props: any){
+        super(props);
+        this.setFace = this.setFace.bind(this);
+        this.buildFaces = this.buildFaces.bind(this);
+        this.moveHappened = this.moveHappened.bind(this);
+        this.state={selectedFace: undefined};
+    }
 
     setFace(key: number, face: Face){
         if(face) {
@@ -25,27 +33,26 @@ export default class FaceBar extends FlowComponent {
 
     }
 
-    shouldComponentUpdate(nextprops: any, nextstate: any){
-        return true;
-    }
+    //shouldComponentUpdate(nextprops: any, nextstate: any){
+        //return true;
+    //}
 
     async setSelectedFace(face: number){
-        this.selectedFace=face;
-        await this.setStateValue(this.selectedFace);
+        this.setState({selectedFace: face});
+        await this.setStateValue(face);
         if(this.outcomes["OnSelect"]){
             await this.triggerOutcome("OnSelect");
         }
-        this.faces.forEach((face: Face) => {
-            face.forceUpdate();
-        });
+        else {
+            manywho.engine.sync(this.flowKey);
+            this.faces.forEach((face: Face) => {
+                face.forceUpdate();
+            });
+        }
+        
     }
 
-    constructor(props: any){
-        super(props);
-        this.setFace = this.setFace.bind(this);
-        this.buildFaces = this.buildFaces.bind(this);
-        this.moveHappened = this.moveHappened.bind(this);
-    }
+    
 
     async componentDidMount(){
         await super.componentDidMount();   
@@ -65,7 +72,7 @@ export default class FaceBar extends FlowComponent {
 
     buildFaces() {
         if(this.loadingState === eLoadingState.ready) {
-            this.selectedFace = parseInt(this.getStateValue() as string);
+            this.setState({selectedFace: parseInt(this.getStateValue() as string)});
             this.faces = new Map();
             this.faceElements = [];
             for(let status = 1 ; status <=5 ; status ++) {

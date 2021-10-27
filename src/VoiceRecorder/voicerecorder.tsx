@@ -11,7 +11,6 @@ export default class VoiceRecorder extends FlowComponent {
     
     recorder: HTMLInputElement;
     mediaRecorder: any;
-    base64data: string;
 
     constructor(props: any){
         super(props);
@@ -27,8 +26,18 @@ export default class VoiceRecorder extends FlowComponent {
 
     async componentDidMount(){
         await super.componentDidMount();   
-        this.base64data = this.getStateValue() as string;
-        this.setState({buffer: decode(this.base64data)});
+        let base64data = this.getStateValue() as string;
+        let byteString = atob(base64data.split(',')[1]);
+        let ab = new ArrayBuffer(byteString.length);
+        let ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        //let buffer = decode(base64data);
+
+        const blob = new Blob([ab], { type: "audio/webm" });
+        const url = window.URL.createObjectURL(blob);
+        this.setState({buffer: ab,  dataurl: url});
         (manywho as any).eventManager.addDoneListener(this.moveHappened, this.componentId);
     }
 
@@ -43,7 +52,7 @@ export default class VoiceRecorder extends FlowComponent {
     }
 
     async startRecording() {
-        this.setState({buffer: []});
+        this.setState({buffer: [], dataurl: undefined});
         let audio = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         if(audio){
             this.setState({audio: audio});
@@ -74,8 +83,11 @@ export default class VoiceRecorder extends FlowComponent {
     }
 
     recordingEnded(e: any) {
-        let dataUri: string = URL.createObjectURL(new Blob(this.state.buffer));
         var reader = new FileReader();
+        let blob = new Blob(this.state.buffer,{ type: "audio/webm" });
+        let url = window.URL.createObjectURL(blob);
+        this.setState({dataurl: url});
+        
         reader.readAsDataURL(new Blob(this.state.buffer)); 
         reader.onloadend = this.dataExtracted;
         this.setState({recording: false});
@@ -83,10 +95,8 @@ export default class VoiceRecorder extends FlowComponent {
         this.mediaRecorder = null;
     }
 
-    dataExtracted(e: any) {
-        this.base64data = e.target.result;     
-        this.setStateValue(this.base64data);           
-        console.log(this.base64data);
+    dataExtracted(e: any) {  
+        this.setStateValue(e.target.result);           
     }
 
 
@@ -128,6 +138,24 @@ export default class VoiceRecorder extends FlowComponent {
         }
 
         let prompt: string = "Hello world";
+        let audio: any;
+        if(this.state.dataurl){
+            audio=(
+                <audio controls style={{width: '100%'}}>
+                        <source src={this.state.dataurl} type="audio/webm"/>
+                </audio>
+            );
+        }
+        else {
+
+        }
+
+        let graph: any;
+        if(this.state.audio) {
+            graph=(
+                <AudioGraph audio={this.state.audio} />
+            );
+        }
         
         return(
             <div
@@ -151,7 +179,8 @@ export default class VoiceRecorder extends FlowComponent {
                 <div
                     className="voice-graph"
                 >
-                    {this.state.audio ? <AudioGraph audio={this.state.audio} /> : ''}
+                    {audio}
+                    {graph}
                 </div>               
             </div>
         );

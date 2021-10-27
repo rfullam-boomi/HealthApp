@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack -p --config webpack.production.config.js",
+    "build": "webpack --config webpack.production.config.js",
     "build-no-source-map": "webpack -p --config webpack.production.config.js --devtool none",
     "upload": "node upload.js",
     "update": "node update.js",

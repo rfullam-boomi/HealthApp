@@ -1,6 +1,6 @@
 import React = require("react");
 import { eRunState } from "../enums";
-import DotClicker from "./dotclicker";
+import DotClicker from "./movingdotclicker";
 
 
 export default class DotClickerOverlay extends React.Component<any,any> {

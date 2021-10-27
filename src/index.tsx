@@ -1,4 +1,4 @@
-export * from './DotClicker/dotclicker';
+export * from './DotClicker/movingdotclicker';
 export * from './FaceBar/facebar';
 export * from './MemoryBoxes/memoryboxes';
 export * from './ColourNames/ColourNames';

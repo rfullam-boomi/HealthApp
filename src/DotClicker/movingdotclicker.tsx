@@ -12,7 +12,7 @@ import DotClickerOverlay from './dotclickeroverlay';
 declare const manywho: any;
 
 
-export default class DotClicker extends FlowComponent {
+export default class MovingDotClicker extends FlowComponent {
     
     header: DotClickerHeader;
     headerElement: any;
@@ -277,4 +277,4 @@ export default class DotClicker extends FlowComponent {
     }
 }
 
-manywho.component.register('DotClicker', DotClicker);
+manywho.component.register('MovingDotClicker', MovingDotClicker);

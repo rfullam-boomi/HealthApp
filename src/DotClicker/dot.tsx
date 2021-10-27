@@ -1,6 +1,6 @@
 import React = require("react");
 import { eActivityState } from "../enums";
-import DotClicker from "./dotclicker";
+import DotClicker from "./movingdotclicker";
 
 export default class Dot extends React.Component<any,any> {
 

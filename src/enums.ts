@@ -1,7 +1,8 @@
 export enum eRunState {
     stopped,
     starting,
-    running
+    running,
+    complete
 }
 
 export enum eActivityState {

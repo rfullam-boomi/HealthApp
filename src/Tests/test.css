@@ -1,26 +1,30 @@
-.dotclick {
+.test {
     display: flex;
     flex-direction: column;
     position: relative;
     border: 1px solid black;
 }
 
-.dotclick-title {
+.test-title {
     display: flex;
     flex-direction: row;
 }
 
-.dotclick-body {
+.test-body {
     display: block;
-    position: relative;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
 }
 
-.dotclick-row {
+.test-row {
     display: block;
     width: 100%;
 }
 
-.dotclick-box {
+.test-box {
     display: inline-block;
     width: 33.333%;
     height:0;
@@ -28,7 +32,7 @@
     position: relative;
 }
 
-.dotclick-box-internal {
+.test-box-internal {
     display: flex;
     position:absolute;
     top:0;
@@ -38,7 +42,7 @@
     
 }
 
-.dotclick-box-box {
+.test-box-box {
     background-color: #3562f3;
     width: 66%;
     height: 66%;
@@ -49,27 +53,28 @@
     pointer-events: none;
 }
 
-.dotclick-box-box-hot {
+.test-box-box-hot {
     background-color: #e8fd2d;
 }
 
-.dotclick-box-box-clickable {
+.test-box-box-clickable {
     pointer-events: all;
     cursor: pointer;
 }
 
-.dotclick-box-box-tagged {
+.test-box-box-tagged {
     box-shadow: 0px 0px 19px 16px rgb(245 72 72);
 }
 
-.dotclick-header {
+.test-header {
     display: flex;
     flex-direction: row;
     height: 6vmin;
     width: 100%;
+    pointer-events: none;
 }
 
-.dotclick-overlay {
+.test-overlay {
     position: absolute;
     left: 0;
     top: 0;
@@ -79,16 +84,18 @@
     pointer-events: none;
     display: flex;
     flex-direction: column;
+    pointer-events: none;
 }
 
-.dotclick-overlay-center{
+.test-overlay-center{
     display: flex;
     flex-direction: column;
     flex-grow: 0;
     margin: auto;
+    pointer-events: none;
 }
 
-.dotclick-overlay-button{ 
+.test-overlay-button{ 
     border: 5px solid #000;
     border-radius: 2rem;
     padding: 1%;
@@ -103,14 +110,16 @@
     white-space: nowrap;
 }
 
-.dotclick-overlay-message{ 
+.test-overlay-message{ 
     font-size: 150%;
     color:#000;
     text-align: center;
     margin: auto;
+    pointer-events: none;
+    user-select: none;
 }
 
-.dotclick-footer {
+.test-footer {
     display: flex;
     flex-direction: row;
     height: 12vmin;
@@ -118,19 +127,19 @@
     width: 100%;
 }
 
-.dotclick-colour {
+.test-colour {
     height: 10vmax;
     display: flex;
 }
 
-.dotclick-colour-label {
+.test-colour-label {
     font-size: 6vmax;
     line-height: 1;
     margin: auto;
 }
 
 
-.dotclick-dotout {
+.test-dotout {
     position: absolute;
     background-color: transparent;
     border-radius: 3rem;
@@ -138,14 +147,14 @@
     height: 15rem;
     display: none;
 }
-.dotclick-dot {
+.test-dot {
     position: relative;
     background-color: red;
-    border-radius: 3rem;
-    width: 3rem;
-    height: 3rem;
+    border-radius: 100%;
+    width: 5rem;
+    height: 5rem;
     display: block;
-    box-shadow: 0px 0px 3rem 3rem red;
+    /* box-shadow: 0px 0px 3rem 3rem red; */
+    border: 2px solid #7e2222;
     margin: auto;
 }
-

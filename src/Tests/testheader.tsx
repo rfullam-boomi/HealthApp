@@ -1,13 +1,13 @@
 import React = require("react");
 import { eRunState, eDelayState, eActivityState } from "../enums";
-import DotClicker from "./movingdotclicker";
+import Test from "./test";
 
 
-export default class DotClickerHeader extends React.Component<any,any> {
+export default class TestHeader extends React.Component<any,any> {
 
 
     render() {
-        let root: DotClicker = this.props.root;
+        let root: Test = this.props.root;
         let content: any;
         let button: any;
         let message: any;
@@ -15,7 +15,7 @@ export default class DotClickerHeader extends React.Component<any,any> {
             case eRunState.stopped:
                 message = (
                     <div
-                        className="dotclick-overlay-message"
+                        className="test-overlay-message"
                     >
                         {""}
                     </div>
@@ -27,7 +27,7 @@ export default class DotClickerHeader extends React.Component<any,any> {
                     case eDelayState.countdown:
                         message = (
                             <div
-                                className="dotclick-overlay-message"
+                                className="test-overlay-message"
                             >
                                 {"Get Ready - " + root.countdownRemaining }
                             </div>
@@ -45,7 +45,7 @@ export default class DotClickerHeader extends React.Component<any,any> {
                     case eActivityState.answering:
                         message = (
                             <div
-                                className="dotclick-overlay-message"
+                                className="test-overlay-message"
                             >
                                 {"Click the dot" + (root.countdownRemaining > 0? " - " + root.countdownRemaining : "")}
                             </div>
@@ -65,7 +65,7 @@ export default class DotClickerHeader extends React.Component<any,any> {
         }
         return(
             <div
-                className="dotclick-header"
+                className="test-header"
             >
                 {message}
             </div>

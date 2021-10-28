@@ -4,19 +4,19 @@ import { CSSProperties } from 'react';
 import { eActivityState, eDelayState, eRunState } from '../enums';
 import { Result, Results } from '../results';
 import Dot from './dot';
-import './dotclicker.css';
-import DotClickerHeader from './dotclickerheader';
-import DotClickerOverlay from './dotclickeroverlay';
+import './test.css';
+import TestHeader from './testheader';
+import TestOverlay from './testoverlay';
 
 
 declare const manywho: any;
 
 
-export default class MovingDotClicker extends FlowComponent {
+export default class Test extends FlowComponent {
     
-    header: DotClickerHeader;
+    header: TestHeader;
     headerElement: any;
-    overlay: DotClickerOverlay;
+    overlay: TestOverlay;
     overlayElement: any;
     dot: Dot;
     dotElement: any;
@@ -24,7 +24,7 @@ export default class MovingDotClicker extends FlowComponent {
     runState: eRunState = eRunState.stopped;
     activityState: eActivityState = eActivityState.none;
     countdownState: eDelayState = eDelayState.none;
-
+    autoStart: boolean = false;
     numRounds: number = 10;
     roundNumber: number = 0;
     countdownRemaining: number = 0;
@@ -51,13 +51,15 @@ export default class MovingDotClicker extends FlowComponent {
     constructor(props: any) {
         super(props);
         this.randomPos = this.randomPos.bind(this);
+        this.centerPos = this.centerPos.bind(this);
         this.startTest = this.startTest.bind(this);
         this.dotClicked = this.dotClicked.bind(this);
     
-        this.numRounds = parseInt(this.getAttribute("numRounds","3"));
+        this.numRounds = parseInt(this.getAttribute("numRounds","1"));
         this.countdownSeconds = parseInt(this.getAttribute("countdownSeconds","4"));
         this.responseSeconds = parseInt(this.getAttribute("responseSeconds","-1"));
         this.startLabel = this.getAttribute("startLabel","Begin");
+        this.autoStart = this.getAttribute("autoStart","false").toLowerCase() === "true";
 
     }
 
@@ -75,21 +77,19 @@ export default class MovingDotClicker extends FlowComponent {
         }
     }
 
-    
-
-    async componentDidMount(){
+     async componentDidMount(){
         await super.componentDidMount();   
         (manywho as any).eventManager.addDoneListener(this.moveHappened, this.componentId);
         this.headerElement = (
-            <DotClickerHeader 
+            <TestHeader 
                 root={this}
-                ref={(element: DotClickerHeader) => {this.header=element}}
+                ref={(element: TestHeader) => {this.header=element}}
             />
         );
         this.overlayElement = (
-            <DotClickerOverlay 
+            <TestOverlay 
                 root={this}
-                ref={(element: DotClickerOverlay) => {this.overlay=element}}
+                ref={(element: TestOverlay) => {this.overlay=element}}
             />
         );
         this.dotElement = (
@@ -98,13 +98,18 @@ export default class MovingDotClicker extends FlowComponent {
                 ref={(element: Dot) => {this.dot=element}}
             />
         );
-        this.forceUpdate();
+        if(this.autoStart === true){
+            this.startTest();
+        }
+        else {
+            this.forceUpdate();
+        }
     }
 
     refreshInfo() {
-        this.overlay.forceUpdate();
-        this.header.forceUpdate();
-        this.dot.forceUpdate();
+        this.overlay?.forceUpdate();
+        this.header?.forceUpdate();
+        this.dot?.forceUpdate();
     }
 
     randomPos() {
@@ -116,12 +121,32 @@ export default class MovingDotClicker extends FlowComponent {
             this.xPos = ( ((rect.width / 100) * xOffset)); //- 120; //(this.dotElement.width / 2) ;
             this.yPos = ( ((rect.height / 100) * yOffset)); //- 120; //(this.dotElement.height / 2);
 
-            this.xPos -= 120;
-            this.yPos -= 120;
+            let outerPxWidth: number = this.convertRemToPixels(15);
+            this.xPos = this.xPos - (outerPxWidth / 2)
+            this.yPos = this.yPos - (outerPxWidth / 2)
+
+            //this.xPos -= 120;
+            //this.yPos -= 120;
         }
     }
 
+    centerPos() {
+        if(this.div) {
+            let rect: DOMRect = this.div.getBoundingClientRect();
+            let left: number = (rect.width / 2);
+            let top: number = (rect.height / 2);
+            let outerPxWidth: number = this.convertRemToPixels(15);
+            this.xPos = left - (outerPxWidth / 2)
+            this.yPos = top - (outerPxWidth / 2)
+        }
+    }
+
+    convertRemToPixels(rem: number) : number {    
+        return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    }
+
     async startTest() {
+        this.forceUpdate();
         this.results.clear();
         this.runState = eRunState.starting;
         this.roundNumber = 0;
@@ -169,73 +194,21 @@ export default class MovingDotClicker extends FlowComponent {
     }
 
     async startRound() {
-        
-        this.countdownState = eDelayState.none;
-        this.activityState = eActivityState.none;
-        this.runState = eRunState.starting;
-
-        this.refreshInfo();
-        await this.countDown(this.countdownSeconds);
-
-        this.runState = eRunState.running;
-        this.refreshInfo();
-        // randomise the hot boxes
-        this.randomPos();
-
-        // start counting
-        let roundStart = new Date().getTime();
-
-        // allow time for answers
-        await this.getAnswers(this.responseSeconds);
-
-        // stop counting
-        let roundEnd = new Date().getTime();
-
-        let score: Result = await this.getScore(this.roundNumber, roundEnd-roundStart);
-
-        this.results.add(score);
-
-        this.runState=eRunState.stopped;
-        this.refreshInfo();
+ 
     }
 
     // accuracy 0 is perfect
-    dotClicked(accuracy: number) {
+    async dotClicked(accuracy: number, time: Date) {
         this.accuracy = accuracy;
         this.responseDone=true;
     }
 
     async getAnswers(maxTime?: number) : Promise<any> {
-        this.activityState = eActivityState.answering;
-        this.responseDone = false;
-        if(maxTime && maxTime > 0) {
-            this.countdownRemaining=maxTime;
-        }
-        else {
-            this.countdownRemaining=-1;
-        }
-        this.refreshInfo();
-
-        while (this.responseDone === false && this.countdownRemaining !== 0){
-            if(this.countdownRemaining > 0) {
-                this.countdownRemaining--;
-            }
-            this.refreshInfo();
-            await this.sleep(1000);
-        }
-        //await this.countDown(numSeconds);
-        this.activityState = eActivityState.none;
-        this.refreshInfo();
-        return;
+        return true;
     }
 
-    async getScore(roundNumber: number, durationMilliseaconds: number) : Promise<Result> {
-        let correct: number = 0;
-        let incorrect: number = 0;
-    
-        this.activityState = eActivityState.results;
-        this.refreshInfo();
-        return new Result(roundNumber, this.accuracy, 0, durationMilliseaconds);
+    async getScore(roundNumber: number, time: number, accuracy: number) : Promise<Result> {
+        return null;
     }
 
     
@@ -257,18 +230,18 @@ export default class MovingDotClicker extends FlowComponent {
 
         return (
             <div
-                className="dotclick"
+                className="test"
                 style={style}
                 ref={(e: HTMLDivElement) => {this.div=e}}
             >
                 {this.overlayElement}
                 <div
-                    className="colnam-title"
+                    className="test-title"
                 >
                    {this.headerElement} 
                 </div>
                 <div
-                    className="colnam-body"
+                    className="test-body"
                 >
                    {this.dotElement}
                 </div>                
@@ -277,4 +250,3 @@ export default class MovingDotClicker extends FlowComponent {
     }
 }
 
-manywho.component.register('MovingDotClicker', MovingDotClicker);

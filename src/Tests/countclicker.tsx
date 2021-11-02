@@ -17,7 +17,7 @@ export default class CountClicker extends Test {
     testRemainingCount: number = 0;
     testStartedTime: number;
     testEndedTime: number;
-    clickCounter: number = 0;
+    round: number = 0;
     constructor(props: any) {
         super(props);
         this.testMaxCount = parseInt(this.getAttribute("clickCount","10"));
@@ -40,6 +40,7 @@ export default class CountClicker extends Test {
        
          // start counting
         this.testStartedTime = new Date().getTime();
+        this.roundNumber = 1;
         // allow time for answers
         await this.getClicks(this.testMaxCount);
 
@@ -52,10 +53,10 @@ export default class CountClicker extends Test {
 
     // accuracy 0 is perfect
     async dotClicked(accuracy: number, time: Date) {
-        console.log("Dot");
-        this.countdownRemaining -= 1;
-        let score: Result = await this.getScore((this.testMaxCount + 1) - this.testRemainingCount, time.getTime() - this.testStartedTime, accuracy);
+        let score: Result = await this.getScore(this.roundNumber, time.getTime() - this.testStartedTime, accuracy);
         this.results.add(score);
+        this.countdownRemaining -= 1;
+        this.roundNumber ++;
     }
 
     async getClicks(maxTime?: number) : Promise<any> {
@@ -82,7 +83,7 @@ export default class CountClicker extends Test {
     async getScore(roundNumber: number, time: number, accuracy: number) : Promise<Result> {
         let correct: number = 0;
         let incorrect: number = 0;
-        return new Result(roundNumber, accuracy, 0, time);
+        return new Result(roundNumber, 0, 0, time, accuracy);
     }
 }
 

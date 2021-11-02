@@ -333,7 +333,7 @@ export default class MemoryBoxes extends FlowComponent {
         });
         this.activityState = eActivityState.results;
         this.refreshInfo();
-        return new Result(roundNumber, correct, incorrect, durationMilliseaconds);
+        return new Result(roundNumber, correct, incorrect, durationMilliseaconds,0);
     }
 
     render() {

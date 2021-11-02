@@ -29,12 +29,14 @@ export class Result {
     correct: number;
     incorrect: number;
     timeSeconds: number;
+    accuracy: number;
 
-    constructor(round: number, correct: number, incorrect: number, time: number) {
+    constructor(round: number, correct: number, incorrect: number, time: number,accuracy: number) {
         this.round = round;
         this.correct = correct;
         this.incorrect = incorrect;
         this.timeSeconds = time;
+        this.accuracy = accuracy;
     }
 
     makeFlowObjectData() : FlowObjectData {
@@ -43,6 +45,7 @@ export class Result {
         result.addProperty(FlowObjectDataProperty.newInstance("correct",eContentType.ContentNumber,this.correct));
         result.addProperty(FlowObjectDataProperty.newInstance("incorrect",eContentType.ContentNumber,this.incorrect));
         result.addProperty(FlowObjectDataProperty.newInstance("time",eContentType.ContentNumber,this.timeSeconds));
+        result.addProperty(FlowObjectDataProperty.newInstance("accuracy",eContentType.ContentNumber,this.accuracy));
         return result;
     }
 }

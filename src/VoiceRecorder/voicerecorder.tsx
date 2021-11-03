@@ -87,7 +87,7 @@ export default class VoiceRecorder extends FlowComponent {
         let url = window.URL.createObjectURL(blob);
         this.setState({dataurl: url});
         
-        reader.readAsDataURL(new Blob(this.state.buffer)); 
+        reader.readAsDataURL(new Blob(this.state.buffer,{ type: "audio/webm" })); 
         reader.onloadend = this.dataExtracted;
         this.setState({recording: false});
         //downloadLink.download = 'acetest.wav';

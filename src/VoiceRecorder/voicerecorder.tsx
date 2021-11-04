@@ -118,6 +118,7 @@ export default class VoiceRecorder extends FlowComponent {
         if(this.state.recording === false){
             button=(
                 <button
+                    key="start"
                     className="voice-button"
                     onClick={this.startRecording} 
                 >
@@ -128,6 +129,7 @@ export default class VoiceRecorder extends FlowComponent {
         else {
             button=(
                 <button
+                    key="stop"
                     className="voice-button"
                     onClick={this.stopRecording} 
                 >

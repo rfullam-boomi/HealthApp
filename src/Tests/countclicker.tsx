@@ -83,7 +83,7 @@ export default class CountClicker extends Test {
     async getScore(roundNumber: number, time: number, accuracy: number) : Promise<Result> {
         let correct: number = 0;
         let incorrect: number = 0;
-        return new Result(roundNumber, 0, 0, time, accuracy);
+        return Result.newInstance(roundNumber, 0, 0, time, accuracy,"","");
     }
 }
 

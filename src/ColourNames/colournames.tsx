@@ -38,7 +38,7 @@ export default class ColourNames extends FlowComponent {
     responseDone: boolean = false;
     response: boolean;
 
-    results: Results = new Results();
+    results: Results;
 
     startLabel: string;
     correctLabel: string;
@@ -69,6 +69,8 @@ export default class ColourNames extends FlowComponent {
         this.startLabel = this.getAttribute("startLabel","Begin");
         this.correctLabel = this.getAttribute("correctLabel","Correct");
         this.incorrectLabel = this.getAttribute("incorrectLabel","Incorrect");
+
+        this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
     }
 
     async componentDidMount(){
@@ -239,7 +241,7 @@ export default class ColourNames extends FlowComponent {
         
         this.activityState = eActivityState.results;
         this.refreshInfo();
-        return new Result(roundNumber, correct, incorrect, durationMilliseaconds,0);
+        return Result.newInstance(roundNumber, correct, incorrect, durationMilliseaconds,0,"","");
     }
 
     render() {

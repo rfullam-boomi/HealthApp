@@ -43,7 +43,7 @@ export default class MemoryBoxes extends FlowComponent {
     responseSeconds: number = 30;
     responseDone: boolean = false;
 
-    results: Results = new Results();
+    results: Results;
 
     startLabel: string;
 
@@ -98,6 +98,8 @@ export default class MemoryBoxes extends FlowComponent {
         this.scoreSeconds = parseInt(this.getAttribute("scoreSeconds","4"));
         this.responseSeconds = parseInt(this.getAttribute("responseSeconds","-1"));
         this.startLabel = this.getAttribute("startLabel","Begin");
+
+        this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
         
     }
 

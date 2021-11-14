@@ -1,6 +1,7 @@
-import { eLoadingState, FlowComponent, FlowObjectData } from "flow-component-model";
+import { eLoadingState, FlowComponent, FlowObjectData, FlowObjectDataArray } from "flow-component-model";
 import { CSSProperties } from "react";
 import React = require("react");
+import { Result, Results } from "../results";
 import Face from "./face";
 import './facebar.css';
 
@@ -13,12 +14,15 @@ export default class FaceBar extends FlowComponent {
     //selectedFace: number; 
     previousContent: any;
 
+    results: Results;
+
     constructor(props: any){
         super(props);
         this.setFace = this.setFace.bind(this);
         this.buildFaces = this.buildFaces.bind(this);
         this.moveHappened = this.moveHappened.bind(this);
         this.state={selectedFace: undefined};
+        this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
     }
 
     setFace(key: number, face: Face){
@@ -33,13 +37,20 @@ export default class FaceBar extends FlowComponent {
 
     }
 
-    //shouldComponentUpdate(nextprops: any, nextstate: any){
-        //return true;
-    //}
-
     async setSelectedFace(face: number){
         this.setState({selectedFace: face});
-        await this.setStateValue(face);
+        let result: Result;
+        if(this.results.items.has(1)){
+            result = this.results.items.get(1);
+            result.result=""+face;
+        }
+        else {
+            this.results.add(Result.newInstance(1,0,0,0,0,""+face,""));
+        }
+
+ 
+        let stateValue = this.results.makeFlowObjectData().items[0];
+        await this.setStateValue(stateValue);
         if(this.outcomes["OnSelect"]){
             await this.triggerOutcome("OnSelect");
         }
@@ -52,11 +63,21 @@ export default class FaceBar extends FlowComponent {
         
     }
 
-    
-
     async componentDidMount(){
         await super.componentDidMount();   
         (manywho as any).eventManager.addDoneListener(this.moveHappened, this.componentId);
+
+        let previousResult: FlowObjectData = this.getStateValue() as FlowObjectData;
+        if(!previousResult){
+            previousResult = this.model.dataSource?.items[0];
+        }
+        if(previousResult) {
+            let previousFace: number = parseInt((previousResult.properties?.result?.value as string) || "-1");
+            this.results.add(
+                Result.fromObjectData(previousResult)
+            );
+            this.setState({selectedFace: previousFace});
+        }
         this.buildFaces();
     }
 
@@ -72,7 +93,7 @@ export default class FaceBar extends FlowComponent {
 
     buildFaces() {
         if(this.loadingState === eLoadingState.ready) {
-            this.setState({selectedFace: parseInt(this.getStateValue() as string)});
+            
             this.faces = new Map();
             this.faceElements = [];
             for(let status = 1 ; status <=5 ; status ++) {

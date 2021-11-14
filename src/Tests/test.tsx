@@ -42,7 +42,7 @@ export default class Test extends FlowComponent {
 
     previousContent: any;
 
-    results: Results = new Results();
+    results: Results;
 
     startLabel: string;
     
@@ -60,6 +60,7 @@ export default class Test extends FlowComponent {
         this.responseSeconds = parseInt(this.getAttribute("responseSeconds","-1"));
         this.startLabel = this.getAttribute("startLabel","Begin");
         this.autoStart = this.getAttribute("autoStart","false").toLowerCase() === "true";
+        this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
 
     }
 

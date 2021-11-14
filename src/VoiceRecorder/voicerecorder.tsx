@@ -1,8 +1,9 @@
-import { FlowComponent } from "flow-component-model";
+import { FlowComponent, FlowObjectDataArray } from "flow-component-model";
 import { CSSProperties } from "react";
 import React = require("react");
 import './voicerecorder.css';
 import AudioGraph from "./voicegraph";
+import { Result, Results } from "../results";
 
 declare const manywho: any;
 
@@ -10,6 +11,7 @@ export default class VoiceRecorder extends FlowComponent {
     
     recorder: HTMLInputElement;
     mediaRecorder: any;
+    results: Results;
 
     constructor(props: any){
         super(props);
@@ -21,22 +23,27 @@ export default class VoiceRecorder extends FlowComponent {
         this.recordingEnded = this.recordingEnded.bind(this);
         this.dataExtracted = this.dataExtracted.bind(this);
         this.state={recording: false, buffer: []}
+        this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
     }
 
     async componentDidMount(){
-        await super.componentDidMount();   
-        let base64data = this.getStateValue() as string;
-        let byteString = atob(base64data.split(',')[1]);
-        let ab = new ArrayBuffer(byteString.length);
-        let ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
+        await super.componentDidMount();  
+        let previousResults: FlowObjectDataArray = this.getStateValue() as FlowObjectDataArray;
+        if(previousResults && previousResults.items.length>0) {
+            let previousResult = previousResults.items[0];
+            let base64data = previousResult.properties?.result?.value as string;
+            let byteString = atob(base64data.split(',')[1]);
+            let ab = new ArrayBuffer(byteString.length);
+            let ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([ab], { type: "audio/webm" });
+            const url = window.URL.createObjectURL(blob);
+            // store the data into the state
+            this.setState({buffer: ab,  dataurl: url});
         }
-        //let buffer = decode(base64data);
 
-        const blob = new Blob([ab], { type: "audio/webm" });
-        const url = window.URL.createObjectURL(blob);
-        this.setState({buffer: ab,  dataurl: url});
         (manywho as any).eventManager.addDoneListener(this.moveHappened, this.componentId);
     }
 
@@ -95,7 +102,11 @@ export default class VoiceRecorder extends FlowComponent {
     }
 
     dataExtracted(e: any) {  
-        this.setStateValue(e.target.result);           
+        let resultData = e.target.result;
+        this.results.clear();
+        this.results.add(Result.newInstance(1,0,0,0,0,resultData,""));  // TODO this should pass in the stimulous
+        let results: FlowObjectDataArray = this.results.makeFlowObjectData();
+        this.setStateValue(results);         
     }
 
 

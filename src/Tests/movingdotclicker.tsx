@@ -81,7 +81,7 @@ export default class MovingDotClicker extends Test {
     
         this.activityState = eActivityState.results;
         this.refreshInfo();
-        return new Result(roundNumber, 0, 0, durationMilliseaconds, accuracy);
+        return Result.newInstance(roundNumber, 0, 0, durationMilliseaconds, accuracy,"","");
     }
 }
 

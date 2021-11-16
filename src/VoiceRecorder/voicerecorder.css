@@ -10,12 +10,37 @@
     min-height: 5rem;
     display: flex;
     flex-direction: column;
+    padding: 1rem;
+}
+
+.voice-prompt-instruction {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    color: black;
 }
 
 .voice-prompt-content {
     margin: auto;
     display: flex;
     flex-direction: column;
+    margin-top: 3rem;
+    border: 2px solid #666;
+    border-radius: 0.4rem;
+    padding: 1rem;
+    width: 100%;
+}
+
+.voice-prompt-content-text {
+    margin: auto;
+    font-size: 1.2rem;
+    color: black;
+    font-weight: 500;
+}
+
+.voice-prompt-content-img {
+    margin: auto;
 }
 
 .voice-graph {
@@ -34,7 +59,8 @@
 
 .voice-buttons {
     width: 100%;
-    height: 3rem;
+    height: 5rem;
+    padding: 1rem;
     display: flex;
     flex-direction: row;
 }

@@ -1,4 +1,4 @@
-import { FlowComponent, FlowObjectDataArray } from "flow-component-model";
+import { FlowComponent, FlowField, FlowObjectDataArray } from "flow-component-model";
 import { CSSProperties } from "react";
 import React = require("react");
 import './voicerecorder.css';
@@ -22,7 +22,7 @@ export default class VoiceRecorder extends FlowComponent {
         this.stopRecording = this.stopRecording.bind(this);
         this.recordingEnded = this.recordingEnded.bind(this);
         this.dataExtracted = this.dataExtracted.bind(this);
-        this.state={recording: false, buffer: []}
+        this.state={recording: false, buffer: [], stimulousPrompt: "", instructionText: ""}
         this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
     }
 
@@ -43,6 +43,23 @@ export default class VoiceRecorder extends FlowComponent {
             // store the data into the state
             this.setState({buffer: ab,  dataurl: url});
         }
+
+        let stimulousFieldName: string = this.getAttribute("stimulousField");
+        let instructionFieldName: string = this.getAttribute("instructionField");
+        if(stimulousFieldName){
+            let stimulousField: FlowField = await this.loadValue(stimulousFieldName);
+            if(stimulousField) {
+                this.setState({stimulousPrompt: this.makeStimulousContent(stimulousField.value as string)});
+            }
+        }
+        if(instructionFieldName){
+            let instructionField: FlowField = await this.loadValue(instructionFieldName);
+            if(instructionField) {
+                this.setState({instructionText: instructionField.value as string});
+            }
+        }
+
+        
 
         (manywho as any).eventManager.addDoneListener(this.moveHappened, this.componentId);
     }
@@ -109,6 +126,71 @@ export default class VoiceRecorder extends FlowComponent {
         this.setStateValue(results);         
     }
 
+    makeStimulousContent(stimulous: string): any {
+        let content: any;
+        if(stimulous){
+            switch(true){
+                case stimulous.startsWith("https:"):
+                case stimulous.startsWith("http:"):
+                    if (this.isUrlImage(stimulous)) {
+                        content = (
+                            <img
+                                className="voice-prompt-content-img"
+                                src={stimulous as string}
+                                style={{height: '2rem', width: 'auto'}}
+                                alt={stimulous as string}
+                            />
+                        );
+                    } else {
+                        content = (
+                            <span 
+                                className="voice-prompt-content-text"
+                            >
+                                {stimulous}
+                            </span>
+                        );
+                    }
+                    break;
+                
+                case stimulous.startsWith("data:"):
+                    content = (
+                        <span 
+                            className="voice-prompt-content-text"
+                        >
+                            {stimulous}
+                        </span>
+                    );
+                    break;
+
+                default:
+                    content = (
+                        <span 
+                            className="voice-prompt-content-text"
+                        >
+                            "{stimulous}"
+                        </span>
+                    );
+                    break;
+
+            }
+        }
+        return content;
+    }
+
+    isUrlImage(url: string): boolean {
+        if (
+            url.endsWith('jpg') ||
+            url.endsWith('jpeg') ||
+            url.endsWith('jfif') ||
+            url.endsWith('png') ||
+            url.endsWith('bmp') ||
+            url.endsWith('ico') ||
+            url.endsWith('gif')
+        ) { return true; } else {
+            return false;
+        }
+    }
+
 
     render() {
         const style: CSSProperties = {};
@@ -149,7 +231,8 @@ export default class VoiceRecorder extends FlowComponent {
             )
         }
 
-        let prompt: string = "Hello world";
+        
+        
         let audio: any;
         if(this.state.dataurl){
             audio=(
@@ -183,9 +266,14 @@ export default class VoiceRecorder extends FlowComponent {
                     className="voice-prompt"
                 >
                     <div
+                        className="voice-prompt-instruction"
+                    >
+                        {this.state.instructionText}
+                    </div>
+                    <div
                         className="voice-prompt-content"
                     >
-                        {prompt}
+                        {this.state.stimulousPrompt}
                     </div>
                 </div>
                 <div

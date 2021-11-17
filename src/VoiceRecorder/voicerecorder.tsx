@@ -1,4 +1,4 @@
-import { FlowComponent, FlowField, FlowObjectDataArray } from "flow-component-model";
+import { FlowComponent, FlowField, FlowObjectDataArray, FlowOutcome } from "flow-component-model";
 import { CSSProperties } from "react";
 import React = require("react");
 import './voicerecorder.css';
@@ -12,6 +12,8 @@ export default class VoiceRecorder extends FlowComponent {
     recorder: HTMLInputElement;
     mediaRecorder: any;
     results: Results;
+    maxDuration: number = 0;
+    countDownTimer: number =-1;
 
     constructor(props: any){
         super(props);
@@ -22,8 +24,11 @@ export default class VoiceRecorder extends FlowComponent {
         this.stopRecording = this.stopRecording.bind(this);
         this.recordingEnded = this.recordingEnded.bind(this);
         this.dataExtracted = this.dataExtracted.bind(this);
-        this.state={recording: false, buffer: [], stimulousPrompt: "", instructionText: ""}
+        this.done = this.done.bind(this);
+        this.timerPing=this.timerPing.bind(this);
+        this.state={recording: false, buffer: [], stimulousPrompt: "", instructionText: "", remainingTime: 0}
         this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
+        this.maxDuration = parseInt(this.getAttribute("responseSeconds","-1"));
     }
 
     async componentDidMount(){
@@ -59,8 +64,6 @@ export default class VoiceRecorder extends FlowComponent {
             }
         }
 
-        
-
         (manywho as any).eventManager.addDoneListener(this.moveHappened, this.componentId);
     }
 
@@ -81,8 +84,26 @@ export default class VoiceRecorder extends FlowComponent {
             this.setState({audio: audio});
             this.recording();
         }
-        
+        if(this.maxDuration>0){
+            this.setState({remainingTime: this.maxDuration});
+            this.countDownTimer = window.setInterval(this.timerPing,1000);
+        }
       //.then(this.recording);
+    }
+
+    timerPing() {
+        let remainingTime: number = this.state.remainingTime;
+        remainingTime --;
+        if(remainingTime<=0){
+            window.clearInterval(this.countDownTimer);
+            this.stopRecording();
+            this.setState({remainingTime: 0});
+        }
+        else {
+            this.setState({remainingTime: remainingTime});
+        }
+        window.setTimeout
+        window.clearTimeout
     }
 
     recording() {
@@ -191,6 +212,11 @@ export default class VoiceRecorder extends FlowComponent {
         }
     }
 
+    async done() {
+        if(this.outcomes["OnComplete"]){
+            await this.triggerOutcome("OnComplete");
+        }
+    }
 
     render() {
         const style: CSSProperties = {};
@@ -207,19 +233,50 @@ export default class VoiceRecorder extends FlowComponent {
             style.height = this.model.height + 'px';
         }
 
+        
+
         let button: any;
+        let countDown: any;
+        let outcomes: any[] = [];
         if(this.state.recording === false){
+            let label: string = "Start";
+            if(this.state.dataurl) {
+                label = "Start Again";
+                outcomes.push(
+                    <button
+                        key="submit"
+                        className="voice-button"
+                        onClick={this.done} 
+                    >
+                        Submit    
+                    </button>
+                )
+            }
             button=(
                 <button
                     key="start"
                     className="voice-button"
                     onClick={this.startRecording} 
                 >
-                    Start    
+                    {label}    
                 </button>
             )
         }
         else {
+
+            if(this.maxDuration>0){
+                countDown=(
+                    <div
+                        className="voice-countdown"
+                    >
+                        <span
+                            className="voice-countdown-label"
+                        >
+                            {this.state.remainingTime + " seconds left"}
+                        </span>
+                    </div>
+                );
+            }
             button=(
                 <button
                     key="stop"
@@ -251,6 +308,21 @@ export default class VoiceRecorder extends FlowComponent {
                 <AudioGraph audio={this.state.audio} />
             );
         }
+
+        
+        Object.values(this.outcomes).forEach((outcome: FlowOutcome) => {
+            if(outcome.developerName !== "OnComplete"){
+                outcomes.push(
+                    <button
+                        key={outcome.developerName}
+                        className="voice-button"
+                        onClick={(e: any) => {this.triggerOutcome(outcome.developerName)}} 
+                    >
+                        {outcome.label}    
+                    </button>
+                )
+            }
+        });
         
         return(
             <div
@@ -276,12 +348,18 @@ export default class VoiceRecorder extends FlowComponent {
                         {this.state.stimulousPrompt}
                     </div>
                 </div>
+                {countDown}
                 <div
                     className="voice-graph"
                 >
                     {audio}
                     {graph}
-                </div>               
+                </div>   
+                <div
+                    className="voice-buttons"
+                >
+                    {outcomes}
+                </div>            
             </div>
         );
     }

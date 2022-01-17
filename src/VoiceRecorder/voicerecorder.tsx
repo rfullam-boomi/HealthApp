@@ -158,7 +158,6 @@ export default class VoiceRecorder extends FlowComponent {
                             <img
                                 className="voice-prompt-content-img"
                                 src={stimulous as string}
-                                style={{height: '2rem', width: 'auto'}}
                                 alt={stimulous as string}
                             />
                         );

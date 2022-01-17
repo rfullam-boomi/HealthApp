@@ -66,18 +66,6 @@ export default class FaceBar extends FlowComponent {
     async componentDidMount(){
         await super.componentDidMount();   
         (manywho as any).eventManager.addDoneListener(this.moveHappened, this.componentId);
-
-        let previousResult: FlowObjectData = this.getStateValue() as FlowObjectData;
-        if(!previousResult){
-            previousResult = this.model.dataSource?.items[0];
-        }
-        if(previousResult) {
-            let previousFace: number = parseInt((previousResult.properties?.result?.value as string) || "-1");
-            this.results.add(
-                Result.fromObjectData(previousResult)
-            );
-            this.setState({selectedFace: previousFace});
-        }
         this.buildFaces();
     }
 
@@ -93,7 +81,18 @@ export default class FaceBar extends FlowComponent {
 
     buildFaces() {
         if(this.loadingState === eLoadingState.ready) {
-            
+            let previousResult: FlowObjectData = this.getStateValue() as FlowObjectData;
+            if(!previousResult){
+                previousResult = this.model.dataSource?.items[0];
+            }
+            if(previousResult) {
+                this.setStateValue(previousResult);
+                let previousFace: number = parseInt((previousResult.properties?.result?.value as string) || "-1");
+                this.results.add(
+                    Result.fromObjectData(previousResult)
+                );
+                this.setState({selectedFace: previousFace});
+            }
             this.faces = new Map();
             this.faceElements = [];
             for(let status = 1 ; status <=5 ; status ++) {

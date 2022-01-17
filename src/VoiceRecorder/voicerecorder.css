@@ -41,6 +41,8 @@
 
 .voice-prompt-content-img {
     margin: auto;
+    height: 16rem;
+    width: auto;
 }
 
 .voice-graph {

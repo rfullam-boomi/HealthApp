@@ -42,6 +42,8 @@ export default class MemoryBoxes extends FlowComponent {
     flashSeconds: number = 3;
     responseSeconds: number = 30;
     responseDone: boolean = false;
+    numBlocks: number = 3;
+    incrementBlockCount: boolean = false;
 
     results: Results;
 
@@ -93,13 +95,15 @@ export default class MemoryBoxes extends FlowComponent {
         this.showHot = this.showHot.bind(this);
 
         this.numRounds = parseInt(this.getAttribute("numRounds","3"));
+        this.numBlocks = parseInt(this.getAttribute("numBlocks","3"));
+        this.incrementBlockCount = this.getAttribute("incrememtBlockCount","false").toLowerCase() === "true"
         this.countdownSeconds = parseInt(this.getAttribute("countdownSeconds","2"));
         this.flashSeconds = parseInt(this.getAttribute("flashSeconds","4"));
         this.scoreSeconds = parseInt(this.getAttribute("scoreSeconds","4"));
         this.responseSeconds = parseInt(this.getAttribute("responseSeconds","-1"));
         this.startLabel = this.getAttribute("startLabel","Begin");
-
         this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
+
         
     }
 
@@ -237,7 +241,7 @@ export default class MemoryBoxes extends FlowComponent {
         this.runState = eRunState.running;
         this.refreshInfo();
         // randomise the hot boxes
-        this.randomizeBoxes();
+        this.randomizeBoxes(this.numBlocks);
 
         // show hot boxes for flash period
         await this.showHot(this.flashSeconds);
@@ -252,7 +256,9 @@ export default class MemoryBoxes extends FlowComponent {
         let roundEnd = new Date().getTime();
 
         let score: Result = await this.getScore(this.roundNumber, roundEnd-roundStart);
-
+        if(score.incorrect === 0 && this.incrementBlockCount===true) {
+            this.numBlocks++;
+        }
         await this.countDown(this.scoreSeconds);
         this.results.add(score);
 
@@ -260,10 +266,10 @@ export default class MemoryBoxes extends FlowComponent {
         this.refreshInfo();
     }
 
-    randomizeBoxes() {
+    randomizeBoxes(numBoxes: number) {
         //get 3 randoms between 0 & 8
         this.hotBoxes = new Array();
-        while (this.hotBoxes.length<3) {
+        while (this.hotBoxes.length<numBoxes) {
             let item: number = (Math.floor(Math.random()*8)+1);
             if(this.hotBoxes.indexOf(item) < 0) {
                 this.hotBoxes.push(item);

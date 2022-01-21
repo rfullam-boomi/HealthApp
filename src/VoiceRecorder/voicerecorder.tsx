@@ -107,7 +107,10 @@ export default class VoiceRecorder extends FlowComponent {
     }
 
     recording() {
-        const options = {mimeType: 'audio/webm'};
+        let mime : string = this.getAttribute("MimeType","audio/webm");
+        let bps : number = parseInt(this.getAttribute("BitsPerSecond","128000"));
+        let codecs: string = "";
+        const options = {mimeType: mime, audioBitsPerSecond: bps};
         this.mediaRecorder = new MediaRecorder(this.state.audio, options);
         this.mediaRecorder.addEventListener('dataavailable', this.dataAvailable);
         this.mediaRecorder.addEventListener('stop', this.recordingEnded);   

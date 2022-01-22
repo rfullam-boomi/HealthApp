@@ -13,11 +13,11 @@ export default class PersistedInput extends FlowComponent {
     }
 
     async componentDidMount() {
-        let val: any = this.getStateValue();
-        this.setState({contentValue: val});
-        if(!val) {
+        await super.componentDidMount();
+        let contentValue: any = this.getStateValue();
+        if(!contentValue) {
             if(this.getAttribute("persist","false").toLowerCase() === "true") {
-                let contentValue=localStorage.getItem(this.componentId);
+                contentValue=localStorage.getItem(this.componentId);
                 if(contentValue) {
                     switch(this.getStateValueType()){
                         case eContentType.ContentString:
@@ -40,11 +40,18 @@ export default class PersistedInput extends FlowComponent {
                     }
                 }
             }
+            await this.setStateValue(contentValue);
+            console.log("val=" + this.getStateValue());
         }
+        
+    }
+
+    async componentWillUnmount() {
+        console.log("unload");
     }
 
 
-    onChange(e: any) {
+    async onChange(e: any) {
         let val : any;
         let pval : string;
 
@@ -68,15 +75,18 @@ export default class PersistedInput extends FlowComponent {
                 break;
             
         }
+        await this.setStateValue(val);
+        console.log("val=" + this.getStateValue());
         this.setState({contentValue: val});
         if(this.getAttribute("persist","false").toLowerCase() === "true") {
             localStorage.setItem(this.componentId,pval);
         }
-        this.setStateValue(val);
+        
 
     }
 
     onBlur(e: any) {
+        /*
         manywho.component.handleEvent(
             this,
             manywho.model.getComponent(
@@ -86,6 +96,7 @@ export default class PersistedInput extends FlowComponent {
             this.props.flowKey,
             null,
         );
+        */
     }
 
     render() {

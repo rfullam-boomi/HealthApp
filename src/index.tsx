@@ -5,4 +5,5 @@ export * from './FaceBar/facebar';
 export * from './MemoryBoxes/memoryboxes';
 export * from './ColourNames/ColourNames';
 export * from './VoiceRecorder/voicerecorder';
+export * from './Login/PersistedInput';
 

@@ -13,8 +13,9 @@ export default class PersistedInput extends FlowComponent {
     }
 
     async componentDidMount() {
-        this.setState({contentValue: this.getStateValue()});
-        if(!this.state.contentValue) {
+        let val: any = this.getStateValue();
+        this.setState({contentValue: val});
+        if(!val) {
             if(this.getAttribute("persist","false").toLowerCase() === "true") {
                 let contentValue=localStorage.getItem(this.componentId);
                 if(contentValue) {

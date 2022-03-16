@@ -1,0 +1,36 @@
+.opblocs {
+    display: flex;
+    flex-direction: column;
+}
+
+.opbloc {
+    display: flex;
+    flex-direction: row;
+    width: 60vw;
+    justify-content: center;
+    border: 2px solid #608b45;
+    margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    cursor: pointer;
+}
+
+.opbloc:last-of-type {
+    margin-bottom: 0;
+}
+
+.opbloc-selected {
+    background-color: #b7d4a5;
+}
+
+.opbloc-label {
+    font-size: 1rem;
+    color: #608b45;
+    margin: auto;
+    text-align: center;
+    font-weight: 500;
+    line-height: 1.1;
+}

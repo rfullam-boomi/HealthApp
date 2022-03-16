@@ -1,0 +1,94 @@
+.vslid {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    margin: 1rem;
+}
+
+.vslid-left {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-grow: 1;
+}
+
+.vslid-summary {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: #000;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.vslid-summary-label {
+    color: #fefefe;
+    font-size: 1rem;
+    font-weight: 300;
+    margin: auto;
+    line-height: 1.5;
+}
+
+.vslid-summary-value {
+    color: #fefefe;
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin: auto;
+}
+
+.vslid-right {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-grow: 1;
+}
+
+.vslid-top {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+}
+
+.vslid-scalemax,
+.vslid-scalemin {
+    margin: auto;
+    font-size: 1rem;
+    color: #000;
+    line-height: 1;
+    font-weight: 500;
+}
+
+
+.vslid-canvas {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    position: relative;
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+.vslid-bottom {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+}
+
+.vslid-bar {
+    height: 100%;
+    border-left: 3px solid #000;
+}
+
+.vslid-pointer {
+    position: absolute;
+    background-color: #f00;
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+    z-index: 10;
+}

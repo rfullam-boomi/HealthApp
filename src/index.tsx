@@ -6,4 +6,6 @@ export * from './MemoryBoxes/memoryboxes';
 export * from './ColourNames/ColourNames';
 export * from './VoiceRecorder/voicerecorder';
 export * from './Login/PersistedInput';
+export * from './OptionBlocks/OptionBlocks';
+export * from './ValueSlider/ValueSlider';
 

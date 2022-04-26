@@ -47,7 +47,7 @@ export default class TestHeader extends React.Component<any,any> {
                             <div
                                 className="test-overlay-message"
                             >
-                                {"Click the dot" + (root.countdownRemaining > 0? " - " + root.countdownRemaining : "")}
+                                {root.countdownRemaining >= 0 ? "Click the dot - " + (root.countdownRemaining + 1)  : ""}
                             </div>
                         );
                         break;

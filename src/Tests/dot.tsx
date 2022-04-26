@@ -6,15 +6,18 @@ import Test from "./test";
 export default class Dot extends React.Component<any,any> {
 
     outer: HTMLDivElement;
+    inner: HTMLDivElement;
 
     constructor(props: any) {
         super(props);
         this.clicked = this.clicked.bind(this);
+        this.unclicked = this.unclicked.bind(this);
     }
 
     clicked(e: any) {
         e.preventDefault();
         e.stopPropagation();
+        this.inner?.classList.add("test-dot-clicked");
         let rect: DOMRect = this.outer.getBoundingClientRect();
         let xCentre: number = rect.x + (rect.width / 2);
         let yCentre: number = rect.y + (rect.height / 2);
@@ -24,6 +27,12 @@ export default class Dot extends React.Component<any,any> {
         let root: Test = this.props.root;
 
         root.dotClicked(avg, new Date());
+    }
+
+    unclicked(e: any) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.inner?.classList.remove("test-dot-clicked")
     }
 
     render() {
@@ -52,14 +61,16 @@ export default class Dot extends React.Component<any,any> {
         return(
             <div
                 className="test-dotout"
-                onClick={this.clicked}
+                onMouseDown={this.clicked}
+                onMouseUp={this.unclicked}
                 onTouchStart={this.clicked}
-                onTouchEnd={e => e.preventDefault()}
+                onTouchEnd={this.unclicked}
                 style={style}
                 ref={(element: HTMLDivElement ) => {this.outer = element}}
             >
                 <div
                     className="test-dot"
+                    ref={(element: HTMLDivElement ) => {this.inner = element}}
                 />
             </div>
             

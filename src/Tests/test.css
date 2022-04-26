@@ -158,3 +158,8 @@
     border: 2px solid #7e2222;
     margin: auto;
 }
+
+.test-dot-clicked {
+    background-color: rgb(12, 170, 25);
+    transition: all ease 0.1s;
+}

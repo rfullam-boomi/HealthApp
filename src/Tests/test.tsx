@@ -156,6 +156,10 @@ export default class Test extends FlowComponent {
             await this.startRound();
         }
         // test complete
+        //if no results make a single fail one
+        if(this.results.items.size === 0) {
+            this.results.add(Result.newInstance(1, 0, 0, 0, 0,"",""));
+        }
         let results: FlowObjectDataArray = this.results.makeFlowObjectData();
         console.log(JSON.stringify(results));
         this.setStateValue(results);

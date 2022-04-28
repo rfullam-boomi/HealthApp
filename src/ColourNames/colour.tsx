@@ -2,16 +2,24 @@ import React = require("react");
 
 export default class ColourName extends React.Component<any,any> {
     
-    colours: Array<string> = ["red","green","blue"];
+    colours: Array<any> = [
+        {name:"Red",color:"#f00"},
+        {name:"Green",color:"#0f0"},
+        {name:"Blue",color:"#00f"},
+        {name:"Pink",color:"#f0f"},
+        {name:"Yellow",color:"#fbde05"}
+    ];
 
     label: string = "";
     colour: string = "transparent";
     correct: boolean = false;
     
     randomise() {
-        this.label = this.colours[Math.floor(Math.random()*this.colours.length)].replace(/\s(.)/g, function($1) { return $1.toUpperCase(); });
-        this.colour = this.colours[Math.floor(Math.random()*this.colours.length)];
-        this.correct = this.label.toLowerCase() === this.colour;
+        let labelPos: number = Math.floor(Math.random()*this.colours.length);
+        this.label = this.colours[labelPos].name;
+        let colorPos: number = Math.floor(Math.random()*this.colours.length);
+        this.colour = this.colours[colorPos].color;
+        this.correct = labelPos===colorPos;
         this.forceUpdate();
     }
 

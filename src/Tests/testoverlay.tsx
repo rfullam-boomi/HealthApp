@@ -13,7 +13,9 @@ export default class TestOverlay extends React.Component<any,any> {
         switch(root.runState){
             case eRunState.stopped:
                 if(root.autoStart === false) {
-                    button=(
+                    button=root.buttons.get(eRunState.stopped);
+                    /*
+                    (
                         <div
                             className="test-overlay-button"
                             onClick={root.startTest}
@@ -21,12 +23,15 @@ export default class TestOverlay extends React.Component<any,any> {
                             Begin Test
                         </div>
                     );  
+                    */
                 }
                 message=undefined;
                 break;
             case eRunState.complete:
                 if(!root.outcomes["OnComplete"]) {
-                    button=(
+                    button=root.buttons.get(eRunState.complete);
+                    /*
+                    (
                         <div
                             className="test-overlay-button"
                             onClick={root.startTest}
@@ -34,11 +39,13 @@ export default class TestOverlay extends React.Component<any,any> {
                             Begin Test
                         </div>
                     );  
+                    */
                 }
                 message=undefined;
                 break;
 
             case eRunState.starting: 
+                button=root.buttons.get(eRunState.starting);
                 /*button=(
                     <div
                         className="test-overlay-button"
@@ -51,6 +58,7 @@ export default class TestOverlay extends React.Component<any,any> {
                 break;
 
             case eRunState.running: 
+                button=root.buttons.get(eRunState.running);
                 /*button=(
                     <div
                         className="test-overlay-button"

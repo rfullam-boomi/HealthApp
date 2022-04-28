@@ -16,3 +16,8 @@ export enum eDelayState {
     countdown,
     none
 }
+
+export enum eInactivityState {
+    watching,
+    none
+}

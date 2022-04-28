@@ -191,11 +191,9 @@ See the TestResult object definition below.
 
 # Functionality
 
-Displays a canvas with a centered dot the user can click.
+Displays a canvas with a centered dot the user can click along with a submit button.
 
-The dot is displayed until the user clicks the dot a specified number of times.
-
-Once this number of clicks is registered then the test completes.
+The dot is displayed until the user clicks the submit button or clicks the dot the a specified maximum number of times.
 
 Each click is recorded as a result with the accuracy of the touch point regards the dot's center and the time from test start of the click.
 
@@ -214,7 +212,7 @@ The number of lead in seconds to count down at the start of the test and between
 
 Default = 5.
 
-### clickCount
+### clickLimit
 
 Number.
 
@@ -237,6 +235,39 @@ Boolean. Value of "true" or "false".
 If true then the "Begin" button is not shown and the test begins immediatly with the countdown
 
 Default = "false".
+
+### submitLabel
+
+String.
+
+The label to show on the submit button while the test is running.
+
+Default = "Begin".
+
+### inactivitySeconds
+
+Number.
+
+The number of seconds of inactivity before a warning is displayed.
+
+Default = -1.  No inactivity check done.
+
+### timeoutContinueLabel
+
+String.
+
+The label on the inactivity timeout warning modal's continue button to carry on the game.
+
+Default = "Continue".
+
+### timeoutAbortLabel
+
+String.
+
+The label on the inactivity timeout warning modal's abort button to exit on the game.
+
+Default = "Exit".
+
 
 ## Outcomes
 

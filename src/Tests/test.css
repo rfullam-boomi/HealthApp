@@ -89,19 +89,18 @@
 
 .test-overlay-center{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-grow: 0;
     margin: auto;
+    margin-bottom: 1vw;
     pointer-events: none;
 }
 
 .test-overlay-button{ 
-    border: 5px solid #000;
-    border-radius: 2rem;
-    padding: 1%;
-    padding-left: 10%;
-    padding-right: 10%;
-    font-size: 200%;
+    border: 0.1rem solid #000;
+    border-radius: 0.3rem;
+    padding: 0 0.5rem;
+    font-size: 1.3rem;
     color: #000;
     background-color: #ccc;
     pointer-events: all;

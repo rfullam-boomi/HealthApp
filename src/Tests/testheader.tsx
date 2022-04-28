@@ -29,7 +29,7 @@ export default class TestHeader extends React.Component<any,any> {
                             <div
                                 className="test-overlay-message"
                             >
-                                {"Get Ready - " + root.countdownRemaining }
+                                {"Get Ready - " + root.countdownRemaining + " seconds remaining" }
                             </div>
                         );
                         break;
@@ -43,13 +43,18 @@ export default class TestHeader extends React.Component<any,any> {
             case eRunState.running: 
                 switch(root.activityState){
                     case eActivityState.answering:
-                        message = (
-                            <div
-                                className="test-overlay-message"
-                            >
-                                {root.countdownRemaining >= 0 ? "Click the dot - " + (root.countdownRemaining + 1)  : ""}
-                            </div>
-                        );
+                        if(root.displayProgressMessage.length > 0) {
+                            message = (
+                                <div
+                                    className="test-overlay-message"
+                                >
+                                    {root.countdownRemaining >= 0 ? "Click the dot - " + (root.countdownRemaining + 1) + " " + root.displayProgressMessage  : ""}
+                                </div>
+                            );
+                        }
+                        else {
+                            message=undefined;
+                        }
                         break;
                     
                     default:

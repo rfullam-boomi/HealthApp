@@ -1,9 +1,10 @@
-import { FlowComponent, FlowObjectDataArray } from 'flow-component-model';
+import { FlowComponent, FlowMessageBox, FlowObjectDataArray } from 'flow-component-model';
 import * as React from 'react';
 import { CSSProperties } from 'react';
-import { eActivityState, eDelayState, eRunState } from '../enums';
+import { eActivityState, eDelayState, eInactivityState, eRunState } from '../enums';
 import { Result, Results } from '../results';
 import Dot from './dot';
+import OverlayButton from './OverlayButton';
 import './test.css';
 import TestHeader from './testheader';
 import TestOverlay from './testoverlay';
@@ -33,6 +34,12 @@ export default class Test extends FlowComponent {
     countdownSeconds: number = 5;
     responseSeconds: number = 30;
     responseDone: boolean = false;
+    inactivityTimeoutSeconds: number = 5;
+    inactivityRemaining: number = 5;
+    inactivityState: eInactivityState = eInactivityState.none;
+    inactivityCallback: any;
+    inactivityTimer: any;
+    displayProgressMessage: string = "";
   
     xPos: number = 0;
     yPos: number = 0;
@@ -48,12 +55,20 @@ export default class Test extends FlowComponent {
     
     accuracy: number;
 
+    buttons: Map<eRunState,any> = new Map();
+
+    messageBox: FlowMessageBox;
+
     constructor(props: any) {
         super(props);
         this.randomPos = this.randomPos.bind(this);
         this.centerPos = this.centerPos.bind(this);
         this.startTest = this.startTest.bind(this);
         this.dotClicked = this.dotClicked.bind(this);
+
+        this.watchInactivity = this.watchInactivity.bind(this);
+        this.unwatchInactivity = this.unwatchInactivity.bind(this);
+        this.inactivityPing = this.inactivityPing.bind(this);
     
         this.numRounds = parseInt(this.getAttribute("numRounds","1"));
         this.countdownSeconds = parseInt(this.getAttribute("countdownSeconds","4"));
@@ -61,6 +76,27 @@ export default class Test extends FlowComponent {
         this.startLabel = this.getAttribute("startLabel","Begin");
         this.autoStart = this.getAttribute("autoStart","false").toLowerCase() === "true";
         this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
+        this.displayProgressMessage = this.getAttribute("progressLabel","");
+        this.inactivityTimeoutSeconds = parseInt(this.getAttribute("inactivitySeconds","-1"));
+
+        this.buttons.set(
+            eRunState.stopped,
+            (
+                <OverlayButton 
+                    label={this.getAttribute("startLabel","Begin")}
+                    callback={this.startTest}
+                />
+            )
+        );
+        this.buttons.set(
+            eRunState.complete,
+            (
+                <OverlayButton 
+                    label={this.getAttribute("submitLabel","Submit")}
+                    callback={this.submitTest}
+                />
+            )
+        );
 
     }
 
@@ -168,6 +204,12 @@ export default class Test extends FlowComponent {
         }
     }
 
+    async submitTest() {
+        if(this.outcomes[this.getAttribute("submitOutcome", "OnSubmit")]) {
+            await this.triggerOutcome(this.getAttribute("submitOutcome", "OnSubmit"));
+        }
+    }
+
     async sleep(milliseconds: number) {
         return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
@@ -190,11 +232,50 @@ export default class Test extends FlowComponent {
         });
     }
 
+    watchInactivity(numSeconds : number, callBack: any) {
+        this.inactivityRemaining = numSeconds;
+        this.inactivityState = eInactivityState.watching;
+        this.inactivityCallback = callBack;
+        this.inactivityTimer = setTimeout(this.inactivityPing,1000);
+    }
+
+    unwatchInactivity() {
+        if(this.inactivityTimer) {
+            clearTimeout(this.inactivityTimer);
+            this.inactivityTimer = undefined;
+        }
+        this.inactivityRemaining = -1;
+        this.inactivityState = eInactivityState.none;
+        this.inactivityCallback = undefined;
+    }
+
+    inactivityPing() {
+        if(this.inactivityTimer) {
+            clearTimeout(this.inactivityTimer);
+            this.inactivityTimer = undefined;
+        }
+        if(this.inactivityRemaining > 0 && this.inactivityState === eInactivityState.watching) {
+                this.inactivityRemaining-=1;
+                this.inactivityTimer = setTimeout(this.inactivityPing,1000);
+        }
+        else {
+            if(this.inactivityState === eInactivityState.watching) {
+                this.inactivityState = eInactivityState.none;
+                if(this.inactivityCallback) {
+                    this.inactivityCallback();
+                }
+            }
+        }
+    }
 
     stopTest() {
         this.countdownState = eDelayState.none;
         this.activityState = eActivityState.none;
         this.runState = eRunState.stopped;
+        if(this.inactivityTimer) {
+            clearTimeout(this.inactivityTimer);
+            this.inactivityTimer = undefined;
+        }
         this.refreshInfo();
     }
 
@@ -239,6 +320,9 @@ export default class Test extends FlowComponent {
                 style={style}
                 ref={(e: HTMLDivElement) => {this.div=e}}
             >
+                <FlowMessageBox 
+                    ref={(element: FlowMessageBox) => {this.messageBox=element}}
+                />
                 {this.overlayElement}
                 <div
                     className="test-title"

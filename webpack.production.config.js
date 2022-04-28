@@ -38,7 +38,6 @@ module.exports = function(env) {
             "react": "React",
         },
         plugins: [
-            new WriteFilePlugin(),
             new MiniCssExtractPlugin({ filename: flow.filenames.css })
         ],
     }

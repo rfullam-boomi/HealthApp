@@ -32,6 +32,7 @@ export default class Test extends FlowComponent {
     roundStart: number;
     roundEnd: number;
     countdownSeconds: number = 5;
+    intervalSeconds: number = 5;
     responseSeconds: number = 30;
     responseDone: boolean = false;
     inactivityTimeoutSeconds: number = 5;
@@ -72,6 +73,7 @@ export default class Test extends FlowComponent {
     
         this.numRounds = parseInt(this.getAttribute("numRounds","1"));
         this.countdownSeconds = parseInt(this.getAttribute("countdownSeconds","4"));
+        this.intervalSeconds = parseInt(this.getAttribute("intervalSeconds","" + this.countdownSeconds));
         this.responseSeconds = parseInt(this.getAttribute("responseSeconds","-1"));
         this.startLabel = this.getAttribute("startLabel","Begin");
         this.autoStart = this.getAttribute("autoStart","false").toLowerCase() === "true";

@@ -69,9 +69,17 @@ Default = 3.
 
 Number.
 
-The number of lead in seconds to count down at the start of the test and between rounds.
+The number of lead in seconds to count down at the start of the test.
 
 Default = 5.
+
+### countdownSeconds
+
+Number.
+
+The number of lead in seconds to count down between rounds.
+
+Default = the value of countdownSeconds.
 
 ### responseSeconds
 

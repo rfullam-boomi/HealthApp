@@ -21,7 +21,12 @@ export default class MovingDotClicker extends Test {
         this.runState = eRunState.starting;
 
         this.refreshInfo();
-        await this.countDown(this.countdownSeconds);
+        if(this.roundNumber === 1) {
+            await this.countDown(this.countdownSeconds);
+        }
+        else {
+            await this.countDown(this.intervalSeconds);
+        }
 
         this.runState = eRunState.running;
         this.refreshInfo();

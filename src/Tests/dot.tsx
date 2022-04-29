@@ -7,6 +7,7 @@ export default class Dot extends React.Component<any,any> {
 
     outer: HTMLDivElement;
     inner: HTMLDivElement;
+    avg: number;
 
     constructor(props: any) {
         super(props);
@@ -24,16 +25,19 @@ export default class Dot extends React.Component<any,any> {
         let yCentre: number = rect.y + (rect.height / 2);
         let xAcc: number = e.clientX - xCentre;
         let yAcc: number = e.clientY - yCentre;
-        let avg: number = (xAcc + yAcc) / 2;
+        this.avg = (xAcc + yAcc) / 2;
         let root: Test = this.props.root;
 
-        root.dotClicked(avg, new Date());
+        
     }
 
     unclicked(e: any) {
         e.preventDefault();
         e.stopPropagation();
-        this.inner?.classList.remove("test-dot-clicked")
+        this.inner?.classList.remove("test-dot-clicked");
+        let root: Test = this.props.root;
+        root.dotClicked(this.avg, new Date());
+        this.avg = undefined;
     }
 
     render() {

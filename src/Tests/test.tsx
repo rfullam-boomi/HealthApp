@@ -273,6 +273,7 @@ export default class Test extends FlowComponent {
         if(this.elapsedTimer) {
             this.stopElapseTimer();
         }
+        this.unwatchInactivity();
         this.runState = eRunState.complete;
         this.refreshInfo();
         // test complete
@@ -323,7 +324,7 @@ export default class Test extends FlowComponent {
             await this.sleep(100);
         }
 
-        this.unwatchInactivity;
+        this.unwatchInactivity();
 
         this.refreshInfo();
     }

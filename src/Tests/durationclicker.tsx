@@ -6,7 +6,7 @@ declare const manywho: any;
 
 export default class DurationClicker extends Test {
     async startTest(): Promise<void> {
-        await super.startTest(-1, parseInt(this.getAttribute("durationSeconds","4")), eDotPosition.center);
+        await super.startTest(parseInt(this.getAttribute("clickLimit","30")), parseInt(this.getAttribute("durationSeconds","4")), eDotPosition.center);
     }
 }
 

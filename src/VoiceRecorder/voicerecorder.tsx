@@ -168,9 +168,8 @@ export default class VoiceRecorder extends FlowComponent {
                         content = (
                             <span 
                                 className="voice-prompt-content-text"
-                            >
-                                {stimulous}
-                            </span>
+                                dangerouslySetInnerHTML={{ __html: "<p>" + this.state.stimulous + "</p>"}} 
+                            />
                         );
                     }
                     break;
@@ -341,9 +340,8 @@ export default class VoiceRecorder extends FlowComponent {
                 >
                     <div
                         className="voice-prompt-instruction"
-                    >
-                        {this.state.instructionText}
-                    </div>
+                        dangerouslySetInnerHTML={{ __html: "<p>" + this.state.instructionText + "</p>"}} 
+                    />
                     <div
                         className="voice-prompt-content"
                     >

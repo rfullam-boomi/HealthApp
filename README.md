@@ -199,6 +199,14 @@ The maximum number of seconds to display the user clickable dot.
 
 Default = "10".
 
+#### clickLimit
+Number.
+
+The maximum number of clicks allowed before auto completing test.
+
+Prevents ridiculous result set sizes.
+
+Default = "30".
 
 
 ## CountClicker

@@ -41,29 +41,22 @@ This will trigger when a face is selected.
 Optional
 
 
-# MovingDotClicker
+# MovingDotClicker, CountClicker & DurationClicker
 
-![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/DotClicker.png)
+These 3 tests are variations on a single core module
 
-# Functionality
+All of them display a dot and allow the user to click on it.
 
-Displays a canvas with a randomly appearing dot the user can click.
+The mode of actual operation is described in the sub sections below.
 
-The time taken from dot appearance to click is recorded as is the accuracy of the touch point regards the dot's center
+The common functionality is as follows: -
 
-## Component Attributes
+## Common Component Attributes
 
 ### classes
 
 Like all components, adding a "classes" attribute will cause that string to be added to the base container's class value.
 
-### numRounds
-
-Number.
-
-The number of times to display a clickable dot which makes up the complete test.
-
-Default = 3.
 
 ### countdownSeconds
 
@@ -71,9 +64,11 @@ Number.
 
 The number of lead in seconds to count down at the start of the test.
 
+Displayed as a countdown timer
+
 Default = 5.
 
-### countdownSeconds
+### intervalSeconds
 
 Number.
 
@@ -81,19 +76,13 @@ The number of lead in seconds to count down between rounds.
 
 Default = the value of countdownSeconds.
 
-### responseSeconds
-
-Number.
-
-The maximum number of seconds to wait for a user to click before defaulting to a failure and moving to the next round.
-
-Default = "-1" which means no timeout.
-
 ### startLabel
 
 String.
 
 The label to show on the start button before a test begins.
+
+Ignored and not shown if autoStart is set.
 
 Default = "Begin".
 
@@ -104,153 +93,6 @@ Boolean. Value of "true" or "false".
 If true then the "Begin" button is not shown and the test begins immediatly with the countdown
 
 Default = "false".
-
-## Outcomes
-
-1 outcome will be used if defined: -
-
-### OnComplete
-
-This will trigger when a test is completed and all rounds have been completed.
-Optional
-
-### State
-
-An List of type TestResult containing one TestResult per round.
-
-See the TestResult object definition below.
-
-
-
-
-# DurationClicker
-
-![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/DotClicker.png)
-
-# Functionality
-
-Displays a canvas with a centered dot the user can click.
-
-The dot is displayed for the nominated duration.
-
-The user can click it as many times as they can in the given period.
-
-Each click is recorded as a result with the accuracy of the touch point regards the dot's center and the time from test start of the click.
-
-## Component Attributes
-
-### classes
-
-Like all components, adding a "classes" attribute will cause that string to be added to the base container's class value.
-
-
-### countdownSeconds
-
-Number.
-
-The number of lead in seconds to count down at the start of the test and between rounds.
-
-Default = 5.
-
-### durationSeconds
-
-Number.
-
-The maximum number of seconds to display the user clickable dot.
-
-Default = "10".
-
-### startLabel
-
-String.
-
-The label to show on the start button before a test begins.
-
-Default = "Begin".
-
-### autoStart
-
-Boolean. Value of "true" or "false".
-
-If true then the "Begin" button is not shown and the test begins immediatly with the countdown.
-
-Default = "false".
-
-## Outcomes
-
-1 outcome will be used if defined: -
-
-### OnComplete
-
-This will trigger when a test is completed and all rounds have been completed.
-Optional
-
-### State
-
-An List of type TestResult containing one TestResult per round.
-
-See the TestResult object definition below.
-
-
-
-# CountClicker
-
-![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/DotClicker.png)
-
-# Functionality
-
-Displays a canvas with a centered dot the user can click along with a submit button.
-
-The dot is displayed until the user clicks the submit button or clicks the dot the a specified maximum number of times.
-
-Each click is recorded as a result with the accuracy of the touch point regards the dot's center and the time from test start of the click.
-
-## Component Attributes
-
-### classes
-
-Like all components, adding a "classes" attribute will cause that string to be added to the base container's class value.
-
-
-### countdownSeconds
-
-Number.
-
-The number of lead in seconds to count down at the start of the test and between rounds.
-
-Default = 5.
-
-### clickLimit
-
-Number.
-
-The number of clicks required to complete the test.
-
-Default = "10".
-
-### startLabel
-
-String.
-
-The label to show on the start button before a test begins.
-
-Default = "Begin".
-
-### autoStart
-
-Boolean. Value of "true" or "false".
-
-If true then the "Begin" button is not shown and the test begins immediatly with the countdown
-
-Default = "false".
-
-### submitLabel
-
-String.
-
-The label to show on the submit button while the test is running.
-
-Default = "Begin".
 
 ### inactivitySeconds
 
@@ -259,6 +101,23 @@ Number.
 The number of seconds of inactivity before a warning is displayed.
 
 Default = -1.  No inactivity check done.
+
+### timeoutTitle
+
+String.
+
+The dialog title message.
+
+Default = "Inactivity".
+
+### timeoutMessage
+
+String.
+
+The dialog body message.
+
+Default = "No activity detected".
+
 
 ### timeoutContinueLabel
 
@@ -276,6 +135,11 @@ The label on the inactivity timeout warning modal's abort button to exit on the 
 
 Default = "Exit".
 
+## State
+
+An List of type TestResult containing one TestResult per round.
+
+See the TestResult object definition below.
 
 ## Outcomes
 
@@ -286,13 +150,78 @@ Default = "Exit".
 This will trigger when a test is completed and all rounds have been completed.
 Optional
 
-### State
-
-An List of type TestResult containing one TestResult per round.
-
-See the TestResult object definition below.
 
 
+## MovingDotClicker
+
+![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/DotClicker.png)
+
+### Functionality
+
+Displays a canvas with a randomly appearing dot the user can click.
+
+The time taken from dot appearance to click is recorded as is the accuracy of the touch point regards the dot's center
+
+### Component Specific Attributes
+
+#### numRounds
+
+Number.
+
+The number of times to display a clickable dot which makes up the complete test.
+
+Default = 3.
+
+
+
+
+## DurationClicker
+
+![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/DotClicker.png)
+
+### Functionality
+
+Displays a canvas with a centered dot the user can click.
+
+The dot is displayed for the nominated duration.
+
+The user can click it as many times as they can in the given period.
+
+Each click is recorded as a result with the accuracy of the touch point regards the dot's center and the time from test start of the click.
+
+### Component Specific Attributes
+
+#### durationSeconds
+
+Number.
+
+The maximum number of seconds to display the user clickable dot.
+
+Default = "10".
+
+
+
+## CountClicker
+
+![alt text](https://github.com/MarkWattsBoomi/HealthApp/blob/main/DotClicker.png)
+
+### Functionality
+
+Displays a canvas with a centered dot the user can click along with a submit button.
+
+The dot is displayed until the user clicks the submit button or clicks the dot the a specified maximum number of times.
+
+Each click is recorded as a result with the accuracy of the touch point regards the dot's center and the time from test start of the click.
+
+### Component Specific Attributes
+
+#### clickLimit
+
+Number.
+
+The maximum number of clicks required to force complete the test bypassing the submit button.
+
+Default = "10".
 
 
 

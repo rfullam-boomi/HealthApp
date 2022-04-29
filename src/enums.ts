@@ -21,3 +21,9 @@ export enum eInactivityState {
     watching,
     none
 }
+
+export enum eDotPosition {
+    center,
+    random,
+    random9
+}

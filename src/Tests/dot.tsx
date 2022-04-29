@@ -15,7 +15,9 @@ export default class Dot extends React.Component<any,any> {
     }
 
     clicked(e: any) {
+        e.preventDefault();
         e.stopPropagation();
+        
         this.inner?.classList.add("test-dot-clicked");
         let rect: DOMRect = this.outer.getBoundingClientRect();
         let xCentre: number = rect.x + (rect.width / 2);
@@ -29,6 +31,7 @@ export default class Dot extends React.Component<any,any> {
     }
 
     unclicked(e: any) {
+        e.preventDefault();
         e.stopPropagation();
         this.inner?.classList.remove("test-dot-clicked")
     }

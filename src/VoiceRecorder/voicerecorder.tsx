@@ -4,6 +4,7 @@ import React = require("react");
 import './voicerecorder.css';
 import AudioGraph from "./voicegraph";
 import { Result, Results } from "../results";
+import VoiceButtons from "./voicebuttons";
 
 declare const manywho: any;
 
@@ -14,6 +15,8 @@ export default class VoiceRecorder extends FlowComponent {
     results: Results;
     maxDuration: number = 0;
     countDownTimer: number =-1;
+    buttons: VoiceButtons;
+    audio: HTMLAudioElement;
 
     constructor(props: any){
         super(props);
@@ -26,7 +29,11 @@ export default class VoiceRecorder extends FlowComponent {
         this.dataExtracted = this.dataExtracted.bind(this);
         this.done = this.done.bind(this);
         this.timerPing=this.timerPing.bind(this);
-        this.state={recording: false, buffer: [], stimulousPrompt: "", instructionText: "", remainingTime: 0}
+        this.play=this.play.bind(this);
+        this.stopPlay=this.stopPlay.bind(this);
+        this.clearRecording=this.clearRecording.bind(this);
+
+        this.state={recording: false, buffer: [], stimulousPrompt: "", instructionText: "", remainingTime: 0, playing: false}
         this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
         this.maxDuration = parseInt(this.getAttribute("responseSeconds","-1"));
     }
@@ -129,6 +136,25 @@ export default class VoiceRecorder extends FlowComponent {
         this.setState({ audio: null });
     }
 
+    play() {
+        if(this.audio) {
+            this.setState({playing: true});
+            this.audio.play();
+        }
+    }
+
+    stopPlay() {
+        if(this.audio) {
+            this.setState({playing: false});
+            this.audio.pause();
+            this.audio.currentTime = 0;
+        }
+    }
+
+    clearRecording() {
+        this.setState({buffer: [], dataurl: undefined});
+    }
+
     recordingEnded(e: any) {
         var reader = new FileReader();
         let blob = new Blob(this.state.buffer,{ type: "audio/webm" });
@@ -221,9 +247,7 @@ export default class VoiceRecorder extends FlowComponent {
 
     render() {
         const style: CSSProperties = {};
-        style.width = '-webkit-fill-available';
-        style.height = '-webkit-fill-available';
-
+        
         if (this.model.visible === false) {
             style.display = 'none';
         }
@@ -235,66 +259,17 @@ export default class VoiceRecorder extends FlowComponent {
         }
 
         
-
-        let button: any;
-        let countDown: any;
-        let outcomes: any[] = [];
-        if(this.state.recording === false){
-            let label: string = "Start";
-            if(this.state.dataurl) {
-                label = "Start Again";
-                outcomes.push(
-                    <button
-                        key="submit"
-                        className="voice-button"
-                        onClick={this.done} 
-                    >
-                        Submit    
-                    </button>
-                )
-            }
-            button=(
-                <button
-                    key="start"
-                    className="voice-button"
-                    onClick={this.startRecording} 
-                >
-                    {label}    
-                </button>
-            )
-        }
-        else {
-
-            if(this.maxDuration>0){
-                countDown=(
-                    <div
-                        className="voice-countdown"
-                    >
-                        <span
-                            className="voice-countdown-label"
-                        >
-                            {this.state.remainingTime + " seconds left"}
-                        </span>
-                    </div>
-                );
-            }
-            button=(
-                <button
-                    key="stop"
-                    className="voice-button"
-                    onClick={this.stopRecording} 
-                >
-                    Stop    
-                </button>
-            )
-        }
-
         
         
         let audio: any;
         if(this.state.dataurl){
             audio=(
-                <audio controls style={{width: '100%'}}>
+                <audio 
+                    controls
+                    style={{width: '100%'}}
+                    ref={(element: HTMLAudioElement) => {this.audio = element}}
+                    onEnded={this.stopPlay}
+                >
                         <source src={this.state.dataurl} type="audio/webm"/>
                 </audio>
             );
@@ -311,30 +286,28 @@ export default class VoiceRecorder extends FlowComponent {
         }
 
         
-        Object.values(this.outcomes).forEach((outcome: FlowOutcome) => {
-            if(outcome.developerName !== "OnComplete"){
-                outcomes.push(
-                    <button
-                        key={outcome.developerName}
-                        className="voice-button"
-                        onClick={(e: any) => {this.triggerOutcome(outcome.developerName)}} 
+        
+
+        let countDown: any;
+        if(this.maxDuration>0){
+            countDown=(
+                <div
+                    className="voice-countdown"
+                >
+                    <span
+                        className="voice-countdown-label"
                     >
-                        {outcome.label}    
-                    </button>
-                )
-            }
-        });
+                        {this.state.remainingTime + " seconds left"}
+                    </span>
+                </div>
+            );
+        }
         
         return(
             <div
                 className="voice"
                 style={style}
             >
-                <div
-                    className="voice-buttons"
-                >
-                    {button}
-                </div>
                 <div
                     className="voice-prompt"
                 >
@@ -355,11 +328,10 @@ export default class VoiceRecorder extends FlowComponent {
                     {audio}
                     {graph}
                 </div>   
-                <div
-                    className="voice-buttons"
-                >
-                    {outcomes}
-                </div>            
+                <VoiceButtons
+                    parent={this}
+                    ref={(element: VoiceButtons) => {this.buttons=element}}
+                />         
             </div>
         );
     }

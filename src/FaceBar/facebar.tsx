@@ -37,7 +37,7 @@ export default class FaceBar extends FlowComponent {
 
     }
 
-    async setSelectedFace(face: number){
+    async setSelectedFace(face: number){ 
         this.setState({selectedFace: face});
         let result: Result;
         if(this.results.items.has(1)){

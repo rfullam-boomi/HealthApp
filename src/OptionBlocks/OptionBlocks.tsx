@@ -1,5 +1,6 @@
 import { FlowComponent, FlowObjectData } from "flow-component-model";
 import React = require("react");
+import { Result, Results } from "../results";
 import OptionBlock from "./OptionBlock";
 import './optionblocks.css';
 declare const manywho: any;
@@ -7,12 +8,14 @@ declare const manywho: any;
 export default class OptionBlocks extends FlowComponent {
     options: Map<string,FlowObjectData> = new Map();
     selectedOption: string = "";
+    results: Results;
     
     constructor(props: any) {
         super(props);
 
         this.loadOptions = this.loadOptions.bind(this);
         this.selectOption = this.selectOption.bind(this);
+        this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
     }
 
     async componentDidMount(): Promise<void> {
@@ -33,7 +36,18 @@ export default class OptionBlocks extends FlowComponent {
 
     async selectOption(option: string) {
         this.selectedOption = option;
-        await this.setStateValue(this.options.get(option));
+        let opt = this.options.get(option).properties.NumericValue.value;
+        let result: Result;
+        if(this.results.items.has(1)){
+            result = this.results.items.get(1);
+            result.result=""+opt;
+        }
+        else {
+            this.results.add(Result.newInstance(1,0,0,0,0,""+opt,""));
+        }
+        let stateValue = this.results.makeFlowObjectData().items[0];
+        await this.setStateValue(stateValue);
+
         if(this.outcomes?.OnSelect) {
             await this.triggerOutcome("OnSelect")
         }

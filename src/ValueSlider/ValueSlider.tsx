@@ -1,5 +1,6 @@
 import { FlowComponent, FlowObjectData } from "flow-component-model";
 import React = require("react");
+import { Result, Results } from "../results";
 import './valueslider.css';
 declare const manywho: any;
 
@@ -14,6 +15,7 @@ export default class ValueSlider extends FlowComponent {
     bottomMargin: number = 10;
     leftMargin: number = 30;
     rightMargin: number = 30;
+    results: Results;
 
     
     constructor(props: any) {
@@ -27,6 +29,7 @@ export default class ValueSlider extends FlowComponent {
         this.dragEnd = this.dragEnd.bind(this);
         this.dragOut = this.dragOut.bind(this);
         //this.currentValue = parseInt(this.getAttribute("step","10")) / 2;
+        this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
     }
 
     async componentDidMount(): Promise<void> {
@@ -164,7 +167,17 @@ export default class ValueSlider extends FlowComponent {
         if(newVal > divisions) {newVal = divisions}
         this.currentValue = newVal;
         this.positionPointer();
-        await this.setStateValue((100 - newVal) + "");
+        let result: Result;
+        if(this.results.items.has(1)){
+            result = this.results.items.get(1);
+            result.result=""+(100 - newVal);
+        }
+        else {
+            this.results.add(Result.newInstance(1,0,0,0,0,""+(100 - newVal),""));
+        }
+        let stateValue = this.results.makeFlowObjectData().items[0];
+        await this.setStateValue(stateValue);
+
         if(this.outcomes?.OnSelect) {
             await this.triggerOutcome("OnSelect")
         }

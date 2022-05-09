@@ -59,6 +59,7 @@ export default class VoiceButtons extends React.Component<any,any> {
                         iconStyle={{color: "#000"}}
                     />
                 )
+                /*
                 topButtons.push(
                     <VoiceButton 
                         key="start"
@@ -69,6 +70,7 @@ export default class VoiceButtons extends React.Component<any,any> {
                         iconStyle={{color: "#f00"}}
                     />
                 )
+                */
             }
             else {
                 topButtons.push(

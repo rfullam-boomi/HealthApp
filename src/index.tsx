@@ -8,4 +8,5 @@ export * from './VoiceRecorder/voicerecorder';
 export * from './Login/PersistedInput';
 export * from './OptionBlocks/OptionBlocks';
 export * from './ValueSlider/ValueSlider';
+export * from './AutoInstall/AutoInstall';
 

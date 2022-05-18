@@ -17,7 +17,7 @@ export default class MemoryBoxOverlay extends React.Component<any,any> {
                         className="membox-overlay-button"
                         onClick={root.startTest}
                     >
-                        Begin Test
+                        Begin Game
                     </div>
                 );  
                 message=undefined;

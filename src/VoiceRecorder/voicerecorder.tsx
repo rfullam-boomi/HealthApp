@@ -16,10 +16,14 @@ export default class VoiceRecorder extends FlowComponent {
     maxDuration: number = 0;
     countDownTimer: number =-1;
     buttons: VoiceButtons;
-    audio: HTMLAudioElement;
+    voiceButtonsElement: any;
+    audioElement: HTMLAudioElement;
+
+    mime: string;
 
     constructor(props: any){
         super(props);
+
         this.moveHappened = this.moveHappened.bind(this);
         this.startRecording = this.startRecording.bind(this);
         this.recording = this.recording.bind(this);
@@ -32,15 +36,35 @@ export default class VoiceRecorder extends FlowComponent {
         this.play=this.play.bind(this);
         this.stopPlay=this.stopPlay.bind(this);
         this.clearRecording=this.clearRecording.bind(this);
+        this.updateButtons=this.updateButtons.bind(this);
 
         this.state={recording: false, buffer: [], stimulousPrompt: "", instructionText: "", remainingTime: 0, playing: false}
         this.results = new Results(this.getAttribute("resultTypeName","TestResult"));
         this.maxDuration = parseInt(this.getAttribute("responseSeconds","-1"));
+
+        
     }
 
     async componentDidMount(){
         await super.componentDidMount();  
         let previousResults: FlowObjectDataArray = this.getStateValue() as FlowObjectDataArray;
+
+        this.mime = this.getAttribute("MimeType","audio/webm"); //
+        if(MediaRecorder.isTypeSupported(this.mime)) {
+            //all good - continue
+            //alert("Mime=" + this.mime);
+        }
+        else {
+            if(MediaRecorder.isTypeSupported("audio/mp4")) {
+                this.mime = "audio/mp4";
+                //alert("Mime=mp4");
+            }
+            else {
+                alert("No supported audio mime types found");
+                this.mime=undefined;
+            }
+        }
+
         if(previousResults && previousResults.items.length>0) {
             let previousResult = previousResults.items[0];
             let base64data = previousResult.properties?.result?.value as string;
@@ -50,11 +74,18 @@ export default class VoiceRecorder extends FlowComponent {
             for (var i = 0; i < byteString.length; i++) {
                 ia[i] = byteString.charCodeAt(i);
             }
-            const blob = new Blob([ab], { type: "audio/webm" });
+            const blob = new Blob([ab], { type: this.mime });
             const url = window.URL.createObjectURL(blob);
             // store the data into the state
             this.setState({buffer: ab,  dataurl: url});
         }
+
+        this.voiceButtonsElement=(
+            <VoiceButtons
+                parent={this}
+                ref={(element: VoiceButtons) => {this.buttons=element}}
+            /> 
+        );
 
         let stimulousFieldName: string = this.getAttribute("stimulousField");
         let instructionFieldName: string = this.getAttribute("instructionField");
@@ -84,15 +115,21 @@ export default class VoiceRecorder extends FlowComponent {
         }
     }
 
+    updateButtons() {
+        if(this.buttons) {
+            this.buttons.forceUpdate();
+        }
+    }
+
     async startRecording() {
         this.setState({buffer: [], dataurl: undefined});
         let audio = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         if(audio){
-            this.setState({audio: audio});
+            this.setState({audio: audio},this.updateButtons);
             this.recording();
         }
         if(this.maxDuration>0){
-            this.setState({remainingTime: this.maxDuration});
+            this.setState({remainingTime: this.maxDuration},this.updateButtons);
             this.countDownTimer = window.setInterval(this.timerPing,1000);
         }
       //.then(this.recording);
@@ -104,25 +141,27 @@ export default class VoiceRecorder extends FlowComponent {
         if(remainingTime<=0){
             window.clearInterval(this.countDownTimer);
             this.stopRecording();
-            this.setState({remainingTime: 0});
+            this.setState({remainingTime: 0},this.updateButtons);
         }
         else {
-            this.setState({remainingTime: remainingTime});
+            this.setState({remainingTime: remainingTime},this.updateButtons);
         }
         window.setTimeout
         window.clearTimeout
     }
 
     recording() {
-        let mime : string = this.getAttribute("MimeType","audio/webm");
-        let bps : number = parseInt(this.getAttribute("BitsPerSecond","128000"));
-        let codecs: string = "";
-        const options = {mimeType: mime, audioBitsPerSecond: bps};
-        this.mediaRecorder = new MediaRecorder(this.state.audio, options);
-        this.mediaRecorder.addEventListener('dataavailable', this.dataAvailable);
-        this.mediaRecorder.addEventListener('stop', this.recordingEnded);   
-        this.mediaRecorder.start();
-        this.setState({recording: true});
+        
+        if(this.mime) {
+            let bps : number = parseInt(this.getAttribute("BitsPerSecond","128000"));
+            let codecs: string = "";
+            const options = {mimeType: this.mime, audioBitsPerSecond: bps};
+            this.mediaRecorder = new MediaRecorder(this.state.audio, options);
+            this.mediaRecorder.addEventListener('dataavailable', this.dataAvailable);
+            this.mediaRecorder.addEventListener('stop', this.recordingEnded);   
+            this.mediaRecorder.start(500);
+            this.setState({recording: true},this.updateButtons);
+        }
     }
 
     dataAvailable(e: any) {
@@ -132,38 +171,41 @@ export default class VoiceRecorder extends FlowComponent {
     }
 
     stopRecording() {
-        this.state.audio.getTracks().forEach((track: any) => track.stop());
-        this.setState({ audio: null });
+        window.clearInterval(this.countDownTimer);
+        if(this.state.audio){
+            this.state.audio.getTracks().forEach((track: any) => track.stop());
+            this.setState({ audio: null, remainingTime: 0 },this.updateButtons);
+        }
     }
 
     play() {
-        if(this.audio) {
-            this.setState({playing: true});
-            this.audio.play();
+        if(this.audioElement) {
+            this.setState({playing: true},this.updateButtons);
+            this.audioElement.play();
         }
     }
 
     stopPlay() {
-        if(this.audio) {
-            this.setState({playing: false});
-            this.audio.pause();
-            this.audio.currentTime = 0;
+        if(this.audioElement) {
+            this.setState({playing: false},this.updateButtons);
+            this.audioElement.pause();
+            this.audioElement.currentTime = 0;
         }
     }
 
     clearRecording() {
-        this.setState({buffer: [], dataurl: undefined});
+        this.setState({buffer: [], dataurl: undefined},this.updateButtons);
     }
 
     recordingEnded(e: any) {
         var reader = new FileReader();
-        let blob = new Blob(this.state.buffer,{ type: "audio/webm" });
+        let blob = new Blob(this.state.buffer,{ type: this.mime });
         let url = window.URL.createObjectURL(blob);
-        this.setState({dataurl: url});
+        this.setState({dataurl: url},this.updateButtons);
         
-        reader.readAsDataURL(new Blob(this.state.buffer,{ type: "audio/webm" })); 
+        reader.readAsDataURL(new Blob(this.state.buffer,{ type: this.mime })); 
         reader.onloadend = this.dataExtracted;
-        this.setState({recording: false});
+        this.setState({recording: false},this.updateButtons);
         //downloadLink.download = 'acetest.wav';
         this.mediaRecorder = null;
     }
@@ -266,11 +308,12 @@ export default class VoiceRecorder extends FlowComponent {
             audio=(
                 <audio 
                     controls
+                    playsinline={true}
                     style={{width: '100%'}}
-                    ref={(element: HTMLAudioElement) => {this.audio = element}}
+                    ref={(element: HTMLAudioElement) => {this.audioElement = element}}
                     onEnded={this.stopPlay}
                 >
-                        <source src={this.state.dataurl} type="audio/webm"/>
+                        <source src={this.state.dataurl} type={this.mime}/>
                 </audio>
             );
         }
@@ -328,10 +371,7 @@ export default class VoiceRecorder extends FlowComponent {
                     {audio}
                     {graph}
                 </div>   
-                <VoiceButtons
-                    parent={this}
-                    ref={(element: VoiceButtons) => {this.buttons=element}}
-                />         
+                {this.voiceButtonsElement}        
             </div>
         );
     }

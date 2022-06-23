@@ -215,7 +215,8 @@ export default class VoiceRecorder extends FlowComponent {
         this.results.clear();
         this.results.add(Result.newInstance(1,0,0,0,0,resultData,""));  // TODO this should pass in the stimulous
         let results: FlowObjectDataArray = this.results.makeFlowObjectData();
-        this.setStateValue(results);         
+        this.setStateValue(results);   
+        this.done();      
     }
 
     makeStimulousContent(stimulous: string): any {
@@ -282,8 +283,8 @@ export default class VoiceRecorder extends FlowComponent {
     }
 
     async done() {
-        if(this.outcomes["OnComplete"]){
-            await this.triggerOutcome("OnComplete");
+        if(this.outcomes["OnRecording"]){
+            await this.triggerOutcome("OnRecording");
         }
     }
 

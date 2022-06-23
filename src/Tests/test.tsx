@@ -270,6 +270,10 @@ export default class Test extends FlowComponent {
             await this.countDown(this.intervalSeconds);
             await this.startRound(dotMode);
         }
+
+        if(this.maxResults > 0 && this.roundNumber >= this.maxResults) {
+            console.log("Hit max clicks limit of " + this.maxResults);
+        }
         if(this.elapsedTimer) {
             this.stopElapseTimer();
         }

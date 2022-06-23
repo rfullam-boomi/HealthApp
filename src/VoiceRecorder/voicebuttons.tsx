@@ -103,13 +103,30 @@ export default class VoiceButtons extends React.Component<any,any> {
 
         Object.values(root.outcomes).forEach((outcome: FlowOutcome) => {
             if(outcome.developerName !== "OnComplete"){
+                let icon: any;
+                let lbl: any;
+                if(outcome.attributes["display"]) {
+                    if(outcome.attributes["display"].value.toLowerCase().indexOf("icon") >= 0 && outcome.attributes["icon"]){
+                        icon=(
+                            <span style={{marginRight: "0.5rem"}} className={"glyphicon glyphicon-" + outcome.attributes["icon"].value}/>
+                        );
+                    }
+                    if(outcome.attributes["display"].value.toLowerCase().indexOf("text") >= 0){
+                        lbl=(
+                            <span> 
+                                {outcome.label}
+                            </span>
+                        );
+                    }
+                }
                 outcomeButtons.push(
                     <button
                         key={outcome.developerName}
                         className="voice-outcome"
                         onClick={(e: any) => {root.triggerOutcome(outcome.developerName)}} 
                     >
-                        {outcome.label}    
+                        {icon}
+                        {lbl}    
                     </button>
                 )
             }

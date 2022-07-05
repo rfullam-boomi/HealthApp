@@ -102,7 +102,7 @@ export default class VoiceButtons extends React.Component<any,any> {
         }
 
         Object.values(root.outcomes).forEach((outcome: FlowOutcome) => {
-            if(outcome.developerName !== "OnComplete"){
+            if(outcome.developerName !== "OnComplete" && outcome.developerName !== "OnRecording"){
                 let icon: any;
                 let lbl: any;
                 if(outcome.attributes["display"]) {

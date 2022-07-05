@@ -80,7 +80,7 @@ export class Result {
         result.addProperty(FlowObjectDataProperty.newInstance("result",eContentType.ContentString,this.result));
         result.addProperty(FlowObjectDataProperty.newInstance("stimulus",eContentType.ContentString,this.stimulus));
         result.addProperty(FlowObjectDataProperty.newInstance("module",eContentType.ContentString,this.module));
-        result.addProperty(FlowObjectDataProperty.newInstance("browser",eContentType.ContentString,this.detectBrowser()));
+        result.addProperty(FlowObjectDataProperty.newInstance("browser",eContentType.ContentString,navigator.userAgent));
         return result;
     }
 

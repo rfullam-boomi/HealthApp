@@ -18,6 +18,7 @@ export default class VoiceRecorder extends FlowComponent {
     buttons: VoiceButtons;
     voiceButtonsElement: any;
     audioElement: HTMLAudioElement;
+    stimulous: string;
 
     mime: string;
 
@@ -93,7 +94,8 @@ export default class VoiceRecorder extends FlowComponent {
         if(stimulousFieldName){
             let stimulousField: FlowField = await this.loadValue(stimulousFieldName);
             if(stimulousField) {
-                this.setState({stimulousPrompt: this.makeStimulousContent(stimulousField.value as string)});
+                this.stimulous = stimulousField.value as string;
+                this.setState({stimulousPrompt: this.makeStimulousContent(this.stimulous)});
             }
         }
         if(instructionFieldName){
@@ -214,7 +216,7 @@ export default class VoiceRecorder extends FlowComponent {
     dataExtracted(e: any) {  
         let resultData = e.target.result;
         this.results.clear();
-        this.results.add(Result.newInstance(1,0,0,0,0,resultData,""));  // TODO this should pass in the stimulous
+        this.results.add(Result.newInstance(1,0,0,0,0,resultData,this.stimulous));  // TODO this should pass in the stimulous
         let results: FlowObjectDataArray = this.results.makeFlowObjectData();
         this.setStateValue(results);   
         this.done();      

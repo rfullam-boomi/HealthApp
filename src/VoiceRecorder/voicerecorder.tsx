@@ -32,6 +32,7 @@ export default class VoiceRecorder extends FlowComponent {
         this.recordingEnded = this.recordingEnded.bind(this);
         this.dataExtracted = this.dataExtracted.bind(this);
         this.done = this.done.bind(this);
+        this.complete = this.complete.bind(this);
         this.timerPing=this.timerPing.bind(this);
         this.play=this.play.bind(this);
         this.stopPlay=this.stopPlay.bind(this);
@@ -285,6 +286,12 @@ export default class VoiceRecorder extends FlowComponent {
     async done() {
         if(this.outcomes["OnRecording"]){
             await this.triggerOutcome("OnRecording");
+        }
+    }
+
+    async complete() {
+        if(this.outcomes["OnComplete"]){
+            await this.triggerOutcome("OnComplete");
         }
     }
 

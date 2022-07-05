@@ -44,7 +44,7 @@ export default class VoiceButtons extends React.Component<any,any> {
                     <VoiceButton 
                         key="submit"
                         classes="voice-button-bottom"
-                        onclick={root.done} 
+                        onclick={root.complete} 
                         label="Save"
                         icon="cloud-upload"
                     />

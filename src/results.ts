@@ -80,6 +80,27 @@ export class Result {
         result.addProperty(FlowObjectDataProperty.newInstance("result",eContentType.ContentString,this.result));
         result.addProperty(FlowObjectDataProperty.newInstance("stimulus",eContentType.ContentString,this.stimulus));
         result.addProperty(FlowObjectDataProperty.newInstance("module",eContentType.ContentString,this.module));
+        result.addProperty(FlowObjectDataProperty.newInstance("browser",eContentType.ContentString,navigator.userAgent));
         return result;
+    }
+
+    detectBrowser() : string {
+        let userAgent: string = navigator.userAgent;
+        let browserName: string;
+        
+        if(userAgent.match(/chrome|chromium|crios/i)){
+            browserName = "chrome";
+        }else if(userAgent.match(/firefox|fxios/i)){
+            browserName = "firefox";
+        }  else if(userAgent.match(/safari/i)){
+            browserName = "safari";
+        }else if(userAgent.match(/opr\//i)){
+            browserName = "opera";
+        } else if(userAgent.match(/edg/i)){
+            browserName = "edge";
+        }else{
+            browserName="No browser detection";
+        }
+        return browserName
     }
 }

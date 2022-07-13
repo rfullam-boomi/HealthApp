@@ -18,6 +18,7 @@ export default class VoiceRecorder extends FlowComponent {
     buttons: VoiceButtons;
     voiceButtonsElement: any;
     audioElement: HTMLAudioElement;
+    stimulous: string;
 
     mime: string;
 
@@ -32,6 +33,7 @@ export default class VoiceRecorder extends FlowComponent {
         this.recordingEnded = this.recordingEnded.bind(this);
         this.dataExtracted = this.dataExtracted.bind(this);
         this.done = this.done.bind(this);
+        this.complete = this.complete.bind(this);
         this.timerPing=this.timerPing.bind(this);
         this.play=this.play.bind(this);
         this.stopPlay=this.stopPlay.bind(this);
@@ -92,7 +94,8 @@ export default class VoiceRecorder extends FlowComponent {
         if(stimulousFieldName){
             let stimulousField: FlowField = await this.loadValue(stimulousFieldName);
             if(stimulousField) {
-                this.setState({stimulousPrompt: this.makeStimulousContent(stimulousField.value as string)});
+                this.stimulous = stimulousField.value as string;
+                this.setState({stimulousPrompt: this.makeStimulousContent(this.stimulous)});
             }
         }
         if(instructionFieldName){
@@ -213,7 +216,7 @@ export default class VoiceRecorder extends FlowComponent {
     dataExtracted(e: any) {  
         let resultData = e.target.result;
         this.results.clear();
-        this.results.add(Result.newInstance(1,0,0,0,0,resultData,""));  // TODO this should pass in the stimulous
+        this.results.add(Result.newInstance(1,0,0,0,0,resultData,this.stimulous));  // TODO this should pass in the stimulous
         let results: FlowObjectDataArray = this.results.makeFlowObjectData();
         this.setStateValue(results);   
         this.done();      
@@ -285,6 +288,12 @@ export default class VoiceRecorder extends FlowComponent {
     async done() {
         if(this.outcomes["OnRecording"]){
             await this.triggerOutcome("OnRecording");
+        }
+    }
+
+    async complete() {
+        if(this.outcomes["OnComplete"]){
+            await this.triggerOutcome("OnComplete");
         }
     }
 

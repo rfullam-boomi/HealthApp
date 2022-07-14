@@ -56,7 +56,7 @@ export default class MemoryBoxHeader extends React.Component<any,any> {
                             <div
                                 className="membox-overlay-message"
                             >
-                                {"Which ones were yellow" + (root.countdownRemaining > 0? " - " + root.countdownRemaining : "")}
+                                {"Which ones were yellow?" + (root.countdownRemaining > 0? " - " + root.countdownRemaining : "")}
                             </div>
                         );
                         break;
